@@ -93,7 +93,7 @@
                 </a>
                 <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                     <li>
-                        <a href="category.php">
+                        <a href="view_menu.php">
                             <i class="bi bi-circle"></i><span>View List Menu</span>
                         </a>
                     </li>
@@ -168,7 +168,7 @@
         echo '<div class="col-lg-8">';
         if ($num > 0) {
 
-            echo '<table class="table table-bordered"><thead><tr><th scope="col">id</th><th scope="col">Name</th><th scope="col">Description</th><th scope="col">Date Created</th></tr></thead>';
+            echo '<table class="table table-bordered"><thead><tr><th scope="col"><center>id</center></th><th scope="col"><center>Name</center></th><th scope="col"><center>Description</center></th><th scope="col"><center>Date Created</center></th></tr></thead>';
 
             while ($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)) {
                 echo '<tbody><tr><th scope="row">' . $row['id'] . '</th><td>' . $row['name'] . '</td><td>' . $row['description'] . '</td><td>' . $row['created_at'] . '</td></tr>';
@@ -179,7 +179,119 @@
         echo '</table>';
         echo '</div>';
 
+        $query2 = "select category_id, name from categories";
+        $result2 = @mysqli_query($dbc, $query2); // Run the query.
+        $num2 = @mysqli_num_rows($result2);
+
+        if (isset($_POST['submitted'])) {
+            $name = $_POST['name'];
+            $desc = $_POST['desc'];
+            $cat = $_POST['category_id'];
+
+            $query = "UPDATE categories
+                        SET name = '$name', description = '$desc'
+                        WHERE category_id = '$cat'";
+            $result = @mysqli_query($dbc, $query);
+
+            if (mysqli_affected_rows($dbc) > 0) {
+                echo '
+                    <div class="alert alert-success bg-success text-light border-0 alert-dismissible fade show" role="alert">
+                    Success! New category has been created.
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    
+                    <script type="text/javascript">
+                        window.location.reload();
+                    </script>';
+
+                /*
+                // Use JavaScript to reload the page
+                echo '<script type="text/javascript">
+                        window.location.reload();
+                        </script>';
+                        */
+            }
+        } 
+        /*
+        else if (isset($_POST['deleted'])) {
+            $cat = $_POST['category_id'];
+
+            $query = "DELETE FROM categories
+                    WHERE category_id = '$cat'";
+            $result = @mysqli_query($dbc, $query); // Run the query.
+            $num = @mysqli_num_rows($result);
+
+            if (mysqli_affected_rows($dbc) > 0) {
+                echo '
+                    <div class="alert alert-success bg-success text-light border-0 alert-dismissible fade show" role="alert">
+                    Success! A category has been deleteted.
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    
+                    <script type="text/javascript">
+                        window.location.reload();
+                    </script>';
+            } else {
+                echo '
+                    <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
+                    System Error! You could not add due to system error.
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>';
+            }
+        }*/
+
         ?>
+
+        <div class="col-xl-6">
+            <div class="card p-4">
+
+                <div class="pagetitle">
+                    <h5>Edit</h5>
+                </div>
+                <form action="view_category.php" method="post">
+                    <div class="row gy-4">
+
+                        <div class="col-md-12">
+                            <?php
+
+                            if ($num2 > 0) {
+                                echo '<select class="form-select" name="category_id" aria-label="Default select example" required>
+                                    <option value="" selected>Category</option>';
+
+                                while ($row2 = @mysqli_fetch_array($result2, MYSQLI_ASSOC)) {
+                                    echo '<option value=' . $row2['category_id'] . '>' . $row2['name'] . '</option>';
+                                }
+                            } else {
+                                echo '<p>No categories available.</p>';
+                            }
+                            echo '</select>';
+
+                            ?>
+                        </div>
+
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" name="name" placeholder="Category name" required>
+                        </div>
+
+                        <div class="col-md-12">
+                            <textarea class="form-control" name="desc" rows="6" placeholder="Description" required></textarea>
+                        </div>
+
+                        <div class="col-md-12 text-center">
+
+                            <button type="submit" class="btn btn-primary">Confirm</button>
+                            <input type="hidden" name="submitted" value="TRUE" />
+                            <!--<button type="submit" class="btn btn-danger">Delete</button>
+                            <input type="hidden" name="deleted" value="TRUE" />-->
+
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
     </main><!-- End #main -->
 
     <!-- ======= Footer ======= -->

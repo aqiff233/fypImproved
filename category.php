@@ -92,7 +92,7 @@
         </a>
         <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="category.php">
+            <a href="view_menu.php">
               <i class="bi bi-circle"></i><span>View List Menu</span>
             </a>
           </li>
@@ -173,14 +173,12 @@
             Success! New category has been created.
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>';
-
-        exit();
       } else {
-        echo '<h1 id="mainhead">System Error</h1>
-        <p class="error">You could not add due to system error. We apologize for any inconvenience.</p>'; // Public message.
-        echo '<p>' . mysqli_error($dbc)  . '<br /><br />Query: ' . $query . '</p>'; // Debugging message.
-
-        exit(); //same
+        echo '
+          <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
+             System Error! You could not add due to system error.
+             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>';
       }
     }
 
@@ -205,7 +203,7 @@
               <input type="hidden" name="submitted" value="TRUE" />
 
             </div>
-
+          
           </div>
         </form>
       </div>
