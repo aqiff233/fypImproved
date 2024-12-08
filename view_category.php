@@ -165,18 +165,33 @@
         $result = @mysqli_query($dbc, $query); // Run the query.
         $num = @mysqli_num_rows($result);
 
+        $counter = 1;
+
         echo '<div class="col-lg-8">';
         if ($num > 0) {
 
-            echo '<table class="table table-bordered"><thead><tr><th scope="col"><center>id</center></th><th scope="col"><center>Name</center></th><th scope="col"><center>Description</center></th></tr></thead>';
+            echo '<table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col"><center>#</center></th>
+                            <th scope="col"><center>Name</center></th>
+                            <th scope="col"><center>Description</center></th>
+                        </tr>
+                    </thead>';
 
             while ($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-                echo '<tbody><tr><th scope="row">' . $row['id'] . '</th><td>' . $row['name'] . '</td><td>' . $row['description'] . '</td></tr>';
+                echo '<tbody>
+                        <tr>
+                            <td><b>' . $counter . '</b></td>
+                            <td>' . $row['name'] . '</td>
+                            <td>' . $row['description'] . '</td>
+                        </tr>';
+                $counter++;
             }
+            echo '</tbody>';
+            echo '</table>';
         } else {
         }
-        echo '</tbody>';
-        echo '</table>';
         echo '</div>';
 
         $query2 = "select category_id, name from categories";
@@ -211,7 +226,7 @@
                         </script>';
                         */
             }
-        } 
+        }
         /*
         else if (isset($_POST['deleted'])) {
             $cat = $_POST['category_id'];

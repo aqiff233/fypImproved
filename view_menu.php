@@ -155,46 +155,112 @@
         <div class="pagetitle">
             <h1>Items</h1>
         </div><!-- End Page Title -->
+        <div class="col-xl-12">
+            <form action="view_menu.php" method="post">
+                <div class="row gy-4">
+                    <div class="card p-4">
+                        <div class="col-md-3 mb-3">
 
-        <?php
+                            <?php
+                            require_once('mysqli.php'); // Connect to the db.
+                            global $dbc;
 
-        require_once('mysqli.php'); // Connect to the db.
-        global $dbc;
+                            $query2 = "select category_id, name from categories";
+                            $result2 = @mysqli_query($dbc, $query2); // Run the query.
+                            $num2 = @mysqli_num_rows($result2);
 
-        $query = "SELECT
-        menus.menus_id,
-        menus.name,
-        menus.price,
-        categories.name AS category_name,  
-        menus.availability,
-        menus.created_at,
-        menus.updated_at
-        FROM menus
-        JOIN
-        categories
-        ON
-        menus.category_id = categories.category_id;
-        
-        ";
-        $result = @mysqli_query($dbc, $query); // Run the query.
-        $num = @mysqli_num_rows($result);
+                            if ($num2 > 0) {
+                                echo '<select class="form-select" name="category_id" aria-label="Default select example" required>
+                            <option value="" selected>Category</option>';
 
-        echo '<div class="col-lg-9">';
-        if ($num > 0) {
+                                while ($row2 = @mysqli_fetch_array($result2, MYSQLI_ASSOC)) {
+                                    echo '<option value=' . $row2['category_id'] . '>' . $row2['name'] . '</option>';
+                                }
 
-            echo '<table class="table table-bordered"><thead><tr><th scope="col"><center>id</center></th><th scope="col"><center>Name</center></th><th scope="col"><center>Price</center></th><th scope="col"><center>Category name</center></th><th scope="col"><center>Availability</center></th><th scope="col"><center>Created at</center></th><th scope="col"><center>Updated at</center></th></tr></thead>';
+                                echo '</select>';
+                            } else {
+                                echo '<p>No categories available.</p>';
+                            }
+                            
+                            echo '<input type="hidden" name="submitted" value="TRUE" />';
 
-            while ($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-                echo '<tbody><tr><th scope="row">' . $row['menus_id'] . '</th><td>' . $row['name'] . '</td><td>' . $row['price'] . '</td><td>' . $row['category_name'] . '</td><td>' . $row['availability'] . '</td><td>' . $row['created_at'] . '</td><td>' . $row['updated_at'] . '</td></tr>';
-            }
-        } else {
-        }
-        echo '</tbody>';
-        echo '</table>';
-        echo '</div>';
+                            if (isset($_POST['submitted'])) {
+                                $cat = $_POST['category_id'];
 
-        ?>
-        
+                                if (!empty($cat)) {
+                                    echo 'category: ' . $row2['name'];
+                                }
+                                else {
+                                    echo 'nope';
+                                }
+                            }
+                            ?>
+                        </div>
+
+                        <?php
+
+                        require_once('mysqli.php'); // Connect to the db.
+                        global $dbc;
+
+                        $query = "SELECT
+                    menus.menus_id,
+                    menus.name,
+                    menus.price,
+                    categories.name AS category_name,  
+                    menus.availability,
+                    menus.created_at,
+                    menus.updated_at
+                    FROM menus
+                    JOIN
+                    categories
+                    ON
+                    menus.category_id = categories.category_id;";
+                        $result = @mysqli_query($dbc, $query); // Run the query.
+                        $num = @mysqli_num_rows($result);
+
+                        $counter = 1;
+
+                        echo '<div class="col-lg-12">';
+                        if ($num > 0) {
+
+                            echo '<table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col"><center>#</center></th>
+                            <th scope="col"><center>Name</center></th>
+                            <th scope="col"><center>Price</center></th>
+                            <th scope="col"><center>Category name</center></th>
+                            <th scope="col"><center>Availability</center></th>
+                            <th scope="col"><center>Created at</center></th>
+                            <th scope="col"><center>Updated at</center></th>
+                        </tr>
+                    </thead>';
+
+                            while ($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                                echo '<tbody>
+                        <tr>
+                            <th scope="row">' . $counter . '</th>
+                            <td>' . $row['name'] . '</td>
+                            <td>' . $row['price'] . '</td>
+                            <td>' . $row['category_name'] . '</td>
+                            <td>' . $row['availability'] . '</td>
+                            <td>' . $row['created_at'] . '</td>
+                            <td>' . $row['updated_at'] . '</td>
+                        </tr>';
+                                $counter++;
+                            }
+                            echo '</tbody>';
+                            echo '</table>';
+                        } else {
+                        }
+                        echo '</div>';
+
+                        ?>
+                    </div>
+                </div>
+            </form>
+        </div>
+
     </main><!-- End #main -->
 
     <!-- ======= Footer ======= -->
@@ -223,6 +289,7 @@
             document.getElementById("datetime").textContent = formattedDate;
         });
     </script>
+
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
     <!-- Vendor JS Files -->
