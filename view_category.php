@@ -168,10 +168,10 @@
         echo '<div class="col-lg-8">';
         if ($num > 0) {
 
-            echo '<table class="table table-bordered"><thead><tr><th scope="col"><center>id</center></th><th scope="col"><center>Name</center></th><th scope="col"><center>Description</center></th><th scope="col"><center>Date Created</center></th></tr></thead>';
+            echo '<table class="table table-bordered"><thead><tr><th scope="col"><center>id</center></th><th scope="col"><center>Name</center></th><th scope="col"><center>Description</center></th></tr></thead>';
 
             while ($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-                echo '<tbody><tr><th scope="row">' . $row['id'] . '</th><td>' . $row['name'] . '</td><td>' . $row['description'] . '</td><td>' . $row['created_at'] . '</td></tr>';
+                echo '<tbody><tr><th scope="row">' . $row['id'] . '</th><td>' . $row['name'] . '</td><td>' . $row['description'] . '</td></tr>';
             }
         } else {
         }
