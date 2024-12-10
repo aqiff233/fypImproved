@@ -159,7 +159,7 @@
             <form action="view_menu.php" method="post">
                 <div class="row gy-4">
                     <div class="card p-4">
-                        <div class="col-md-3 mb-3">
+                        <div class="col-md-3 mb-3 d-flex align-items-center gap-2">
 
                             <?php
                             require_once('mysqli.php'); // Connect to the db.
@@ -169,32 +169,25 @@
                             $result2 = @mysqli_query($dbc, $query2); // Run the query.
                             $num2 = @mysqli_num_rows($result2);
 
+                            //$all = '';
+                            //$all = 1;
+
                             if ($num2 > 0) {
                                 echo '<select class="form-select" name="category_id" aria-label="Default select example" required>
-                            <option value="" selected>Category</option>';
+                                        <option value="" selected disabled>Category</option>';
 
                                 while ($row2 = @mysqli_fetch_array($result2, MYSQLI_ASSOC)) {
                                     echo '<option value=' . $row2['category_id'] . '>' . $row2['name'] . '</option>';
                                 }
-
+                                echo '<option value="all">All Categories</option>';
                                 echo '</select>';
                             } else {
                                 echo '<p>No categories available.</p>';
                             }
-                            
-                            echo '<input type="hidden" name="submitted" value="TRUE" />';
 
-                            if (isset($_POST['submitted'])) {
-                                $cat = $_POST['category_id'];
-
-                                if (!empty($cat)) {
-                                    echo 'category: ' . $row2['name'];
-                                }
-                                else {
-                                    echo 'nope';
-                                }
-                            }
                             ?>
+                            <button type="submit" class="btn btn-primary">Filter</button>
+                            <input type="hidden" name="submitted" value="TRUE" />
                         </div>
 
                         <?php
@@ -202,60 +195,190 @@
                         require_once('mysqli.php'); // Connect to the db.
                         global $dbc;
 
-                        $query = "SELECT
-                    menus.menus_id,
-                    menus.name,
-                    menus.price,
-                    categories.name AS category_name,  
-                    menus.availability,
-                    menus.created_at,
-                    menus.updated_at
-                    FROM menus
-                    JOIN
-                    categories
-                    ON
-                    menus.category_id = categories.category_id;";
-                        $result = @mysqli_query($dbc, $query); // Run the query.
-                        $num = @mysqli_num_rows($result);
-
                         $counter = 1;
 
-                        echo '<div class="col-lg-12">';
-                        if ($num > 0) {
+                        //$cat = $_POST['category_id'];
 
-                            echo '<table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th scope="col"><center>#</center></th>
-                            <th scope="col"><center>Name</center></th>
-                            <th scope="col"><center>Price</center></th>
-                            <th scope="col"><center>Category name</center></th>
-                            <th scope="col"><center>Availability</center></th>
-                            <th scope="col"><center>Created at</center></th>
-                            <th scope="col"><center>Updated at</center></th>
-                        </tr>
-                    </thead>';
+                        if (isset($_POST['submitted'])) {
 
-                            while ($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-                                echo '<tbody>
-                        <tr>
-                            <th scope="row">' . $counter . '</th>
-                            <td>' . $row['name'] . '</td>
-                            <td>' . $row['price'] . '</td>
-                            <td>' . $row['category_name'] . '</td>
-                            <td>' . $row['availability'] . '</td>
-                            <td>' . $row['created_at'] . '</td>
-                            <td>' . $row['updated_at'] . '</td>
-                        </tr>';
-                                $counter++;
+                            $cat = $_POST['category_id'];
+                            $selected = $cat;
+
+
+
+                            if ($selected == 'all') {
+                                $query = "SELECT
+                            menus.menus_id,
+                            menus.name,
+                            menus.price,
+                            categories.name AS category_name,  
+                            menus.availability,
+                            menus.created_at,
+                            menus.updated_at
+                            FROM menus
+                            JOIN
+                            categories
+                            ON
+                            menus.category_id = categories.category_id;";
+                                $result = @mysqli_query($dbc, $query); // Run the query.
+                                $num = @mysqli_num_rows($result);
+
+                                $counter = 1;
+
+                                echo '<div class="col-lg-12">';
+
+                                if ($num > 0) {
+
+                                    echo '<table class="table table-striped table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col"><center>#</center></th>
+                                                <th scope="col"><center>Name</center></th>
+                                                <th scope="col"><center>Price</center></th>
+                                                <th scope="col"><center>Category name</center></th>
+                                                <th scope="col"><center>Availability</center></th>
+                                                <th scope="col"><center>Created at</center></th>
+                                                <th scope="col"><center>Updated at</center></th>
+                                                </tr>
+                                        </thead>';
+
+                                    while ($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                                        echo '<tbody>
+                                            <tr>
+                                                <th scope="row">' . $counter . '</th>
+                                                <td>' . $row['name'] . '</td>
+                                                <td>' . $row['price'] . '</td>
+                                                <td>' . $row['category_name'] . '</td>
+                                                <td>' . $row['availability'] . '</td>
+                                                <td>' . $row['created_at'] . '</td>
+                                                <td>' . $row['updated_at'] . '</td>
+                                            </tr>';
+                                        $counter++;
+                                    }
+                                    echo '</tbody>';
+                                    echo '</table>';
+                                } else {
+                                }
+                                echo '</div>';
+                            } else {
+                                $query3 = "SELECT
+                                menus.menus_id,
+                                menus.name,
+                                menus.price,
+                                categories.name AS category_name,  
+                                menus.availability,
+                                menus.created_at,
+                                menus.updated_at
+                                FROM menus
+                                JOIN
+                                categories
+                                ON
+                                menus.category_id = categories.category_id
+                                WHERE menus.category_id = $cat";
+                                $result3 = @mysqli_query($dbc, $query3); // Run the query.
+                                $num3 = @mysqli_num_rows($result3);
+
+                                if ($num3 > 0) {
+
+                                    echo '<table class="table table-striped table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col"><center>#</center></th>
+                                                    <th scope="col"><center>Name</center></th>
+                                                    <th scope="col"><center>Price</center></th>
+                                                    <th scope="col"><center>Category name</center></th>
+                                                    <th scope="col"><center>Availability</center></th>
+                                                    <th scope="col"><center>Created at</center></th>
+                                                    <th scope="col"><center>Updated at</center></th>
+                                                    </tr>
+                                            </thead>';
+
+                                    while ($row3 = @mysqli_fetch_array($result3, MYSQLI_ASSOC)) {
+                                        echo '<tbody>
+                                                <tr>
+                                                    <th scope="row">' . $counter . '</th>
+                                                    <td>' . $row3['name'] . '</td>
+                                                    <td>' . $row3['price'] . '</td>
+                                                    <td>' . $row3['category_name'] . '</td>
+                                                    <td>' . $row3['availability'] . '</td>
+                                                    <td>' . $row3['created_at'] . '</td>
+                                                    <td>' . $row3['updated_at'] . '</td>
+                                                </tr>';
+                                        $counter++;
+                                    }
+                                    echo '</tbody>';
+                                    echo '</table>';
+                                } else {
+                                    echo 'none';
+                                }
                             }
-                            echo '</tbody>';
-                            echo '</table>';
+
+                            if (mysqli_affected_rows($dbc) > 0) {
+                                echo '
+                                <div class="alert alert-success bg-success text-light border-0 alert-dismissible fade show" role="alert">
+                                    Success!
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>';
+                            }
                         } else {
+
+                            $query = "SELECT
+                            menus.menus_id,
+                            menus.name,
+                            menus.price,
+                            categories.name AS category_name,  
+                            menus.availability,
+                            menus.created_at,
+                            menus.updated_at
+                            FROM menus
+                            JOIN
+                            categories
+                            ON
+                            menus.category_id = categories.category_id;";
+                            $result = @mysqli_query($dbc, $query); // Run the query.
+                            $num = @mysqli_num_rows($result);
+
+                            $counter = 1;
+
+                            echo '<div class="col-lg-12">';
+                            if ($num > 0) {
+
+                                echo '<table class="table table-striped table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col"><center>#</center></th>
+                                                <th scope="col"><center>Name</center></th>
+                                                <th scope="col"><center>Price</center></th>
+                                                <th scope="col"><center>Category name</center></th>
+                                                <th scope="col"><center>Availability</center></th>
+                                                <th scope="col"><center>Created at</center></th>
+                                                <th scope="col"><center>Updated at</center></th>
+                                                </tr>
+                                        </thead>';
+
+                                while ($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                                    echo '<tbody>
+                                            <tr>
+                                                <th scope="row">' . $counter . '</th>
+                                                <td>' . $row['name'] . '</td>
+                                                <td>' . $row['price'] . '</td>
+                                                <td>' . $row['category_name'] . '</td>
+                                                <td>' . $row['availability'] . '</td>
+                                                <td>' . $row['created_at'] . '</td>
+                                                <td>' . $row['updated_at'] . '</td>
+                                            </tr>';
+                                    $counter++;
+                                }
+                                echo '</tbody>';
+                                echo '</table>';
+                            } else {
+                            }
+                            echo '</div>';
                         }
-                        echo '</div>';
 
                         ?>
+
+
                     </div>
                 </div>
             </form>
@@ -289,6 +412,14 @@
             document.getElementById("datetime").textContent = formattedDate;
         });
     </script>
+    <!--<script>
+        // Set the alert to fade out after 3 seconds
+        setTimeout(function() {
+            var alert = document.querySelector('.alert');
+            alert.classList.remove('show');
+            alert.classList.add('fade');
+        }, 2000); // 3000 milliseconds = 3 seconds
+    </script>-->
 
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 

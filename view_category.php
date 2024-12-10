@@ -156,106 +156,86 @@
             <h1>Categories</h1>
         </div><!-- End Page Title -->
 
-        <?php
+        <div class="col-xl-6">
+            <div class="row gy-4">
+                <div class="card p-4">
+                    <?php
 
-        require_once('mysqli.php'); // Connect to the db.
-        global $dbc;
+                    require_once('mysqli.php'); // Connect to the db.
+                    global $dbc;
 
-        $query = "SELECT category_id AS id,  name AS name,  description AS description,  created_at AS created_at FROM categories";
-        $result = @mysqli_query($dbc, $query); // Run the query.
-        $num = @mysqli_num_rows($result);
+                    $query = "SELECT category_id AS id,  name AS name,  description AS description,  created_at AS created_at FROM categories";
+                    $result = @mysqli_query($dbc, $query); // Run the query.
+                    $num = @mysqli_num_rows($result);
 
-        $counter = 1;
+                    $counter = 1;
 
-        echo '<div class="col-lg-8">';
-        if ($num > 0) {
+                    //echo '<div class="col-lg-8">';
+                    if ($num > 0) {
 
-            echo '<table class="table table-striped table-bordered">
-                    <thead>
-                        <tr>
-                            <th scope="col"><center>#</center></th>
-                            <th scope="col"><center>Name</center></th>
-                            <th scope="col"><center>Description</center></th>
-                        </tr>
-                    </thead>';
+                        echo '<table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col"><center>#</center></th>
+                                        <th scope="col"><center>Name</center></th>
+                                        <th scope="col"><center>Description</center></th>
+                                    </tr>
+                                </thead>';
 
-            while ($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-                echo '<tbody>
-                        <tr>
-                            <td><b>' . $counter . '</b></td>
-                            <td>' . $row['name'] . '</td>
-                            <td>' . $row['description'] . '</td>
-                        </tr>';
-                $counter++;
-            }
-            echo '</tbody>';
-            echo '</table>';
-        } else {
-        }
-        echo '</div>';
+                        while ($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                            echo '<tbody>
+                                <tr>
+                                    <td><b>' . $counter . '</b></td>
+                                    <td>' . $row['name'] . '</td>
+                                    <td>' . $row['description'] . '</td>
+                                </tr>';
+                            $counter++;
+                        }
+                        echo '</tbody>';
+                        echo '</table>';
+                    } else {
+                    }
+                    echo '</div>';
 
-        $query2 = "select category_id, name from categories";
-        $result2 = @mysqli_query($dbc, $query2); // Run the query.
-        $num2 = @mysqli_num_rows($result2);
+                    $query2 = "select category_id, name from categories";
+                    $result2 = @mysqli_query($dbc, $query2); // Run the query.
+                    $num2 = @mysqli_num_rows($result2);
 
-        if (isset($_POST['submitted'])) {
-            $name = $_POST['name'];
-            $desc = $_POST['desc'];
-            $cat = $_POST['category_id'];
+                    if (isset($_POST['submitted'])) {
+                        $name = $_POST['name'];
+                        $desc = $_POST['desc'];
+                        $cat = $_POST['category_id'];
 
-            $query = "UPDATE categories
-                        SET name = '$name', description = '$desc'
-                        WHERE category_id = '$cat'";
-            $result = @mysqli_query($dbc, $query);
+                        $query = "UPDATE categories
+                                    SET name = '$name', description = '$desc'
+                                    WHERE category_id = '$cat'";
+                        $result = @mysqli_query($dbc, $query);
 
-            if (mysqli_affected_rows($dbc) > 0) {
-                echo '
-                    <div class="alert alert-success bg-success text-light border-0 alert-dismissible fade show" role="alert">
-                    Success! New category has been created.
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    
-                    <script type="text/javascript">
-                        window.location.reload();
-                    </script>';
+                        if (mysqli_affected_rows($dbc) > 0) {
+                            echo '
+                                <div class="alert alert-success bg-success text-light border-0 alert-dismissible fade show" role="alert">
+                                    Success! New category has been created.
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+            
+                                <script type="text/javascript">
+                                    window.location.reload();
+                                    </script>';
 
-                /*
-                // Use JavaScript to reload the page
-                echo '<script type="text/javascript">
-                        window.location.reload();
-                        </script>';
-                        */
-            }
-        }
-        /*
-        else if (isset($_POST['deleted'])) {
-            $cat = $_POST['category_id'];
+                            /*
+        // Use JavaScript to reload the page
+        echo '<script type="text/javascript">
+                window.location.reload();
+                </script>';
+                */
+                        }
+                    }
 
-            $query = "DELETE FROM categories
-                    WHERE category_id = '$cat'";
-            $result = @mysqli_query($dbc, $query); // Run the query.
-            $num = @mysqli_num_rows($result);
+                    ?>
+                </div>
+            </div>
+        </div>
 
-            if (mysqli_affected_rows($dbc) > 0) {
-                echo '
-                    <div class="alert alert-success bg-success text-light border-0 alert-dismissible fade show" role="alert">
-                    Success! A category has been deleteted.
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    
-                    <script type="text/javascript">
-                        window.location.reload();
-                    </script>';
-            } else {
-                echo '
-                    <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
-                    System Error! You could not add due to system error.
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>';
-            }
-        }*/
-
-        ?>
 
         <div class="col-xl-6">
             <div class="card p-4">
