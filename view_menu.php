@@ -173,7 +173,7 @@
                             //$all = 1;
 
                             if ($num2 > 0) {
-                                echo '<select class="form-select" name="category_id" aria-label="Default select example" required>
+                                echo '<select class="form-select" name="category_id" aria-label="Default select example" id="fieldA" required>
                                         <option value="" selected disabled>Category</option>';
 
                                 while ($row2 = @mysqli_fetch_array($result2, MYSQLI_ASSOC)) {
@@ -186,49 +186,54 @@
                             }
 
                             ?>
-                            <button type="submit" class="btn btn-primary">Filter</button>
+                            <button type="submit" class="btn btn-primary" id="buttonA">Filter</button>
                             <input type="hidden" name="submitted" value="TRUE" />
                         </div>
+                        </form>
 
                         <?php
-
                         require_once('mysqli.php'); // Connect to the db.
                         global $dbc;
 
                         $counter = 1;
-
-                        //$cat = $_POST['category_id'];
 
                         if (isset($_POST['submitted'])) {
 
                             $cat = $_POST['category_id'];
                             $selected = $cat;
 
-
-
                             if ($selected == 'all') {
                                 $query = "SELECT
-                            menus.menus_id,
-                            menus.name,
-                            menus.price,
-                            categories.name AS category_name,  
-                            menus.availability,
-                            menus.created_at,
-                            menus.updated_at
-                            FROM menus
-                            JOIN
-                            categories
-                            ON
-                            menus.category_id = categories.category_id;";
+                                menus.menus_id,
+                                menus.name,
+                                menus.price,
+                                categories.name AS category_name,  
+                                menus.availability,
+                                menus.created_at,
+                                menus.updated_at
+                                FROM menus
+                                JOIN
+                                categories
+                                ON
+                                menus.category_id = categories.category_id;";
                                 $result = @mysqli_query($dbc, $query); // Run the query.
                                 $num = @mysqli_num_rows($result);
 
                                 $counter = 1;
 
+                                if (mysqli_affected_rows($dbc) > 0) {
+                                    echo '
+                                    <div class="alert alert-success bg-success text-light border-0 alert-dismissible fade show" role="alert">
+                                        Success!
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>';
+                                }
+
                                 echo '<div class="col-lg-12">';
 
                                 if ($num > 0) {
 
+                                    //echo '<div class="col-lg-12">';
                                     echo '<table class="table table-striped table-bordered">
                                         <thead>
                                             <tr>
@@ -257,10 +262,15 @@
                                     }
                                     echo '</tbody>';
                                     echo '</table>';
+                                    //echo '</div>';
+
                                 } else {
                                 }
                                 echo '</div>';
                             } else {
+                                $cat = $_POST['category_id'];
+                                $selected = $cat;
+
                                 $query3 = "SELECT
                                 menus.menus_id,
                                 menus.name,
@@ -277,6 +287,14 @@
                                 WHERE menus.category_id = $cat";
                                 $result3 = @mysqli_query($dbc, $query3); // Run the query.
                                 $num3 = @mysqli_num_rows($result3);
+
+                                if (mysqli_affected_rows($dbc) > 0) {
+                                    echo '
+                                    <div class="alert alert-success bg-success text-light border-0 alert-dismissible fade show" role="alert">
+                                        Success!
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>';
+                                }
 
                                 if ($num3 > 0) {
 
@@ -308,18 +326,76 @@
                                     }
                                     echo '</tbody>';
                                     echo '</table>';
+
+                                    echo '<div class="col-xl-4">
+                                            <form action="view_menu.php" method="post">
+                                                <div class="card p-4">
+                                                        <div class="row gy-4">';
+
+                                    $query4 = "SELECT 
+                                    menus.menus_id, 
+                                    menus.name
+                                    FROM 
+                                    menus
+                                    JOIN 
+                                    categories
+                                    ON 
+                                    menus.category_id = categories.category_id
+                                    WHERE 
+                                    menus.category_id = $cat ";
+                                    $result4 = @mysqli_query($dbc, $query4); // Run the query.
+                                    $num4 = @mysqli_num_rows($result4);
+
+                                    if ($num4 > 0) {
+                                        echo '<div class="col-md-12">
+                                                <select class="form-select" name="menus_id" aria-label="Default select example" id="fieldB" required>
+                                                <option value="" selected disabled>Items</option>';
+
+                                        while ($row4 = @mysqli_fetch_array($result4, MYSQLI_ASSOC)) {
+                                            echo '<option value=' . $row4['menus_id'] . '>' . $row4['name'] . '</option>';
+                                        }
+                                        echo '</select>';
+                                        echo '</div>';
+                                    } else {
+                                        echo '<p>No items available.</p>';
+                                    }
+
+                                    echo '<div class="col-md-12 text-center">
+                                                <button type="submit" class="btn btn-primary" id="buttonB">Confirm</button>
+                                                <input type="hidden" name="stock" value="TRUE" />
+                                            </div>';
+
+
+                                    echo '</div>';
+                                    echo '</div>';
+                                    echo '</form>';
+                                    echo '</div>';
                                 } else {
                                     echo 'none';
                                 }
+
+                                if (isset($_POST['stock'])) {
+                                    $id = $_POST['menus_id'];
+    
+                                    if (!empty($_POST['menus_id'])){
+                                        echo'menus id: ' . $id;
+                                    } else {
+                                        echo 'empty';
+                                    }
+    
+                                }
                             }
 
-                            if (mysqli_affected_rows($dbc) > 0) {
-                                echo '
-                                <div class="alert alert-success bg-success text-light border-0 alert-dismissible fade show" role="alert">
-                                    Success!
-                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>';
-                            }
+                            /*if (isset($_POST['stock'])) {
+                                $id = $_POST['menus_id'];
+
+                                if (!empty($_POST['menus_id'])){
+                                    echo'menus id: ' . $id;
+                                } else {
+                                    echo 'empty';
+                                }
+
+                            }*/
                         } else {
 
                             $query = "SELECT
@@ -377,11 +453,9 @@
                         }
 
                         ?>
-
-
                     </div>
                 </div>
-            </form>
+            
         </div>
 
     </main><!-- End #main -->
@@ -420,6 +494,27 @@
             alert.classList.add('fade');
         }, 2000); // 3000 milliseconds = 3 seconds
     </script>-->
+    <script>
+        // Attach event listeners to both buttons
+        document.getElementById('buttonA').addEventListener('click', function(event) {
+            const fieldA = document.getElementById('fieldA');
+            const fieldB = document.getElementById('fieldB');
+
+            // Ensure only Field A is required
+            fieldA.required = true;
+            fieldB.required = false;
+        });
+
+        document.getElementById('buttonB').addEventListener('click', function(event) {
+            const fieldA = document.getElementById('fieldA');
+            const fieldB = document.getElementById('fieldB');
+
+            // Ensure only Field B is required
+            fieldA.required = false;
+            fieldB.required = true;
+        });
+    </script>
+
 
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 

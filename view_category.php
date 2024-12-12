@@ -156,7 +156,7 @@
             <h1>Categories</h1>
         </div><!-- End Page Title -->
 
-        <div class="col-xl-6">
+        <div class="col-xl-12">
             <div class="row gy-4">
                 <div class="card p-4">
                     <?php
@@ -221,13 +221,6 @@
                                 <script type="text/javascript">
                                     window.location.reload();
                                     </script>';
-
-                            /*
-        // Use JavaScript to reload the page
-        echo '<script type="text/javascript">
-                window.location.reload();
-                </script>';
-                */
                         }
                     }
 
@@ -237,7 +230,7 @@
         </div>
 
 
-        <div class="col-xl-6">
+        <div class="col-xl-9 mx-auto">
             <div class="card p-4">
 
                 <div class="pagetitle">
