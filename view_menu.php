@@ -197,6 +197,9 @@
 
                         $counter = 1;
 
+                        $yes = 1;
+                        $no = 0;
+
                         if (isset($_POST['submitted'])) {
 
                             $cat = $_POST['category_id'];
@@ -360,11 +363,18 @@
                                         echo '<p>No items available.</p>';
                                     }
 
+                                    echo '<div class="col-md-12">
+                                                <select class="form-select" name="availability" aria-label="Default select example" id="fieldB" required>
+                                                    <option value="" selected disabled>Availability</option>
+                                                    <option value="' . $yes . '">Yes</option>
+                                                    <option value="' . $no . '">No</option>
+                                                </select>
+                                            </div>';
+                                            
                                     echo '<div class="col-md-12 text-center">
                                                 <button type="submit" class="btn btn-primary" id="buttonB">Confirm</button>
                                                 <input type="hidden" name="stock" value="TRUE" />
                                             </div>';
-
 
                                     echo '</div>';
                                     echo '</div>';
@@ -374,28 +384,8 @@
                                     echo 'none';
                                 }
 
-                                if (isset($_POST['stock'])) {
-                                    $id = $_POST['menus_id'];
-    
-                                    if (!empty($_POST['menus_id'])){
-                                        echo'menus id: ' . $id;
-                                    } else {
-                                        echo 'empty';
-                                    }
-    
-                                }
+                                
                             }
-
-                            /*if (isset($_POST['stock'])) {
-                                $id = $_POST['menus_id'];
-
-                                if (!empty($_POST['menus_id'])){
-                                    echo'menus id: ' . $id;
-                                } else {
-                                    echo 'empty';
-                                }
-
-                            }*/
                         } else {
 
                             $query = "SELECT
@@ -450,6 +440,30 @@
                             } else {
                             }
                             echo '</div>';
+                        }
+
+                        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['stock'], $_POST['menus_id'], $_POST['availability'])) {
+                            $id = $_POST['menus_id'];
+                            $availability = (int) $_POST['availability'];
+                            $availabilityValue = ($availability === $yes) ? 'TRUE' : 'FALSE';
+                            
+                            $query5 = " UPDATE menus
+                                        SET availability =  $availabilityValue
+                                        WHERE menus_id = $id";
+                            $result5 = @mysqli_query($dbc, $query5); // Run the query.
+                            //$num5 = @mysqli_num_rows($result5);
+
+                            if (mysqli_affected_rows($dbc) > 0) {
+                                echo '
+                                    <div class="alert alert-success bg-success text-light border-0 alert-dismissible fade show" role="alert">
+                                        Success! New category has been created.
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                    
+                                    <script type="text/javascript">
+                                        window.location.reload();
+                                    </script>';
+                            }
                         }
 
                         ?>
