@@ -84,7 +84,7 @@
             </li><!-- End Dashboard Nav -->
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="index.html">
+                <a class="nav-link collapse show" href="orders.php">
                     <i class="bi bi-bell-fill"></i>
                     <span>Take Order</span>
                 </a>
@@ -121,9 +121,9 @@
                 <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-card-list"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
-                <ul id="forms-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
+                <ul id="forms-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                     <li>
-                        <a href="view_category.php" class="active">
+                        <a href="view_category.php">
                             <i class="bi bi-circle"></i><span>View List Category</span>
                         </a>
                     </li>
@@ -165,7 +165,7 @@
     <main id="main" class="main">
 
         <div class="pagetitle">
-            <h1>Orders</h1>
+            <h1>Menu</h1>
         </div><!-- End Page Title -->
 
         <!--<nav>
@@ -191,11 +191,246 @@
         <?php
         require_once('mysqli.php'); // Connect to the db.
         global $dbc;
-
-        //$query = "";
-       // $result = @mysqli_query($dbc, $query); // Run the query.
-        //$num = @mysqli_num_rows($result);
         ?>
+        <div class="container">
+            <nav class="px-3 mb-3 mt-3">
+                <div class="nav nav-underline" id="nav-tab" role="tablist">
+                    <button class="nav-link active" id="nav-masakan-panas-tab" data-bs-toggle="tab" data-bs-target="#nav-masakan-panas" type="button" role="tab" aria-controls="nav-masakan-panas" aria-selected="true">Masakan Panas</button>
+                    <button class="nav-link" id="nav-naan-tadoori-tab" data-bs-toggle="tab" data-bs-target="#nav-naan-tadoori" type="button" role="tab" aria-controls="nav-naan-tadoori" aria-selected="false">Naan Tandoori</button>
+                    <button class="nav-link" id="nav-roti-puri-tab" data-bs-toggle="tab" data-bs-target="#nav-roti-puri" type="button" role="tab" aria-controls="nav-roti-puri" aria-selected="false">Roti Puri</button>
+                    <button class="nav-link" id="nav-minuman-panas-tab" data-bs-toggle="tab" data-bs-target="#nav-minuman-panas" type="button" role="tab" aria-controls="nav-minuman-panas" aria-selected="false">Minuman Panas</button>
+                    <button class="nav-link" id="nav-minuman-sejuk-tab" data-bs-toggle="tab" data-bs-target="#nav-minuman-sejuk" type="button" role="tab" aria-controls="nav-minuman-sejuk" aria-selected="false">Minuman Sejuk</button>
+                    <button class="nav-link" id="nav-air-buah-tab" data-bs-toggle="tab" data-bs-target="#nav-air-buah" type="button" role="tab" aria-controls="nav-air-buah" aria-selected="false">Air Buah</button>
+                </div>
+            </nav>
+
+            <div class="tab-content" id="nav-tabContent">
+
+                <div class="tab-pane fade show active" id="nav-masakan-panas" role="tabpanel" aria-labelledby="nav-masakan-panas-tab" tabindex="0">
+                    <div class="row">
+                        <?php
+                        $query = "SELECT menus_id, name, price FROM menus WHERE category_id = 7";
+                        $result = mysqli_query($dbc, $query); // Run the query (no error suppression).
+
+                        if ($result) { // Check if the query was successful.
+                            $num = mysqli_num_rows($result);
+
+                            if ($num > 0) {
+                                while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                                    $id = $row['menus_id'];
+                                    $name = $row['name'];
+                                    $price = $row['price'];
+
+                                    echo '<div class="col-lg-3">
+                                            <label class="card-label">
+                                                <input type="checkbox" name="card-selection[]" value="' . $id . '" class="d-none">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h4 class="card-title">' . $name . '</h4>
+                                                        <p>' . $price . '</p>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </div>'; // Correctly close divs
+                                }
+                            } else {
+                                echo '<div class="col-12"><p>No menus found for this category.</p></div>'; // Handle empty result
+                            }
+                            mysqli_free_result($result); // Free the result set.
+                        } else {
+                            echo '<div class="col-12"><p>Error executing query: ' . mysqli_error($dbc) . '</p></div>'; // Error handling
+                        }
+                        ?>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="nav-naan-tadoori" role="tabpanel" aria-labelledby="nav-naan-tadoori-tab" tabindex="0">
+                    <div class="row">
+                        <?php
+                        $query = "SELECT menus_id, name, price FROM menus WHERE category_id = 5";
+                        $result = mysqli_query($dbc, $query); // Run the query (no error suppression).
+
+                        if ($result) { // Check if the query was successful.
+                            $num = mysqli_num_rows($result);
+
+                            if ($num > 0) {
+                                while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                                    $id = $row['menus_id'];
+                                    $name = $row['name'];
+                                    $price = $row['price'];
+
+                                    echo '<div class="col-lg-2">
+                                            <label class="card-label">
+                                                <input type="checkbox" name="card-selection[]" value="' . $id . '" class="d-none">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h4 class="card-title">' . $name . '</h4>
+                                                        <p>' . $price . '</p>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </div>'; // Correctly close divs
+                                }
+                            } else {
+                                echo '<div class="col-12"><p>No menus found for this category.</p></div>'; // Handle empty result
+                            }
+                            mysqli_free_result($result); // Free the result set.
+                        } else {
+                            echo '<div class="col-12"><p>Error executing query: ' . mysqli_error($dbc) . '</p></div>'; // Error handling
+                        }
+                        ?>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="nav-roti-puri" role="tabpanel" aria-labelledby="nav-roti-puri-tab" tabindex="0">
+                <div class="row">
+                        <?php
+                        $query = "SELECT menus_id, name, price FROM menus WHERE category_id = 7";
+                        $result = mysqli_query($dbc, $query); // Run the query (no error suppression).
+
+                        if ($result) { // Check if the query was successful.
+                            $num = mysqli_num_rows($result);
+
+                            if ($num > 0) {
+                                while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                                    $id = $row['menus_id'];
+                                    $name = $row['name'];
+                                    $price = $row['price'];
+
+                                    echo '<div class="col-lg-3">
+                                            <label class="card-label">
+                                                <input type="checkbox" name="card-selection[]" value="' . $id . '" class="d-none">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h4 class="card-title">' . $name . '</h4>
+                                                        <p>' . $price . '</p>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </div>'; // Correctly close divs
+                                }
+                            } else {
+                                echo '<div class="col-12"><p>No menus found for this category.</p></div>'; // Handle empty result
+                            }
+                            mysqli_free_result($result); // Free the result set.
+                        } else {
+                            echo '<div class="col-12"><p>Error executing query: ' . mysqli_error($dbc) . '</p></div>'; // Error handling
+                        }
+                        ?>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="nav-minuman-panas" role="tabpanel" aria-labelledby="nav-minuman-panas-tab" tabindex="0">
+                <div class="row">
+                        <?php
+                        $query = "SELECT menus_id, name, price FROM menus WHERE category_id = 7";
+                        $result = mysqli_query($dbc, $query); // Run the query (no error suppression).
+
+                        if ($result) { // Check if the query was successful.
+                            $num = mysqli_num_rows($result);
+
+                            if ($num > 0) {
+                                while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                                    $id = $row['menus_id'];
+                                    $name = $row['name'];
+                                    $price = $row['price'];
+
+                                    echo '<div class="col-lg-3">
+                                            <label class="card-label">
+                                                <input type="checkbox" name="card-selection[]" value="' . $id . '" class="d-none">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h4 class="card-title">' . $name . '</h4>
+                                                        <p>' . $price . '</p>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </div>'; // Correctly close divs
+                                }
+                            } else {
+                                echo '<div class="col-12"><p>No menus found for this category.</p></div>'; // Handle empty result
+                            }
+                            mysqli_free_result($result); // Free the result set.
+                        } else {
+                            echo '<div class="col-12"><p>Error executing query: ' . mysqli_error($dbc) . '</p></div>'; // Error handling
+                        }
+                        ?>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="nav-minuman-sejuk" role="tabpanel" aria-labelledby="nav-minuman-sejuk-tab" tabindex="0">
+                <div class="row">
+                        <?php
+                        $query = "SELECT menus_id, name, price FROM menus WHERE category_id = 7";
+                        $result = mysqli_query($dbc, $query); // Run the query (no error suppression).
+
+                        if ($result) { // Check if the query was successful.
+                            $num = mysqli_num_rows($result);
+
+                            if ($num > 0) {
+                                while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                                    $id = $row['menus_id'];
+                                    $name = $row['name'];
+                                    $price = $row['price'];
+
+                                    echo '<div class="col-lg-3">
+                                            <label class="card-label">
+                                                <input type="checkbox" name="card-selection[]" value="' . $id . '" class="d-none">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h4 class="card-title">' . $name . '</h4>
+                                                        <p>' . $price . '</p>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </div>'; // Correctly close divs
+                                }
+                            } else {
+                                echo '<div class="col-12"><p>No menus found for this category.</p></div>'; // Handle empty result
+                            }
+                            mysqli_free_result($result); // Free the result set.
+                        } else {
+                            echo '<div class="col-12"><p>Error executing query: ' . mysqli_error($dbc) . '</p></div>'; // Error handling
+                        }
+                        ?>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="nav-air-buah" role="tabpanel" aria-labelledby="nav-air-buah-tab" tabindex="0">
+                <div class="row">
+                        <?php
+                        $query = "SELECT menus_id, name, price FROM menus WHERE category_id = 7";
+                        $result = mysqli_query($dbc, $query); // Run the query (no error suppression).
+
+                        if ($result) { // Check if the query was successful.
+                            $num = mysqli_num_rows($result);
+
+                            if ($num > 0) {
+                                while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                                    $id = $row['menus_id'];
+                                    $name = $row['name'];
+                                    $price = $row['price'];
+
+                                    echo '<div class="col-lg-3">
+                                            <label class="card-label">
+                                                <input type="checkbox" name="card-selection[]" value="' . $id . '" class="d-none">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h4 class="card-title">' . $name . '</h4>
+                                                        <p>' . $price . '</p>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </div>'; // Correctly close divs
+                                }
+                            } else {
+                                echo '<div class="col-12"><p>No menus found for this category.</p></div>'; // Handle empty result
+                            }
+                            mysqli_free_result($result); // Free the result set.
+                        } else {
+                            echo '<div class="col-12"><p>Error executing query: ' . mysqli_error($dbc) . '</p></div>'; // Error handling
+                        }
+                        ?>
+                    </div>
+                </div>
+
+            </div>
+        </div>
 
 
 
