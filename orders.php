@@ -53,95 +53,95 @@
   </header><!-- End Header -->
 
   <!-- ======= Sidebar ======= -->
-<aside id="sidebar" class="sidebar">
+  <aside id="sidebar" class="sidebar">
 
-<ul class="sidebar-nav" id="sidebar-nav">
+    <ul class="sidebar-nav" id="sidebar-nav">
 
-  <li class="nav-item">
-    <a class="nav-link collapsed" href="index.html">
-      <i class="bi bi-grid"></i>
-      <span>Dashboard</span>
-    </a>
-  </li><!-- End Dashboard Nav -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="index.html">
+          <i class="bi bi-grid"></i>
+          <span>Dashboard</span>
+        </a>
+      </li><!-- End Dashboard Nav -->
 
-  <li class="nav-item">
-    <a class="nav-link collapsed" href="take_order.php">
-      <i class="bi bi-bell-fill"></i>
-      <span>Take Order</span>
-    </a>
-  </li>
-
-  <li class="nav-item">
-    <a class="nav-link" href="orders.php"> 
-      <i class="bi bi-list-ul"></i>
-      <span>Orders</span>
-    </a>
-  </li>
-
-  <li class="nav-heading">Catalogs</li>
-
-  <li class="nav-item">
-    <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-      <i class="bi bi-box-seam"></i><span>Menus</span><i class="bi bi-chevron-down ms-auto"></i>
-    </a>
-    <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-      <li>
-        <a href="view_menu.php">
-          <i class="bi bi-circle"></i><span>View List Menu</span>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="take_order.php">
+          <i class="bi bi-bell-fill"></i>
+          <span>Take Order</span>
         </a>
       </li>
-      <li>
-        <a href="menu.php">
-          <i class="bi bi-circle"></i><span>Create Menu</span>
+
+      <li class="nav-item">
+        <a class="nav-link collapse show" href="index.html">
+          <i class="bi bi-list-ul"></i>
+          <span>Orders</span>
         </a>
       </li>
+
+      <li class="nav-heading">Catalogs</li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-box-seam"></i><span>Menus</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="view_menu.php">
+              <i class="bi bi-circle"></i><span>View List Menu</span>
+            </a>
+          </li>
+          <li>
+            <a href="menu.php">
+              <i class="bi bi-circle"></i><span>Create Menu</span>
+            </a>
+          </li>
+        </ul>
+      </li><!-- End Components Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-card-list"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="view_category.php">
+              <i class="bi bi-circle"></i><span>View List Category</span>
+            </a>
+          </li>
+          <li>
+            <a href="category.php">
+              <i class="bi bi-circle"></i><span>Create Category</span>
+            </a>
+          </li>
+        </ul>
+      </li><!-- End Forms Nav -->
+
+      <li class="nav-heading">Users</li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="pages-login.html">
+          <i class="bi bi-box-arrow-left"></i>
+          <span>Logout</span>
+        </a>
+      </li><!-- End Login Page Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="pages-blank.html">
+          <i class="bi bi-file-earmark"></i>
+          <span>Blank</span>
+        </a>
+      </li><!-- End Blank Page Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="category.php">
+          <i class="bi bi-book"></i>
+          <span>Category</span>
+        </a>
+      </li>
+
     </ul>
-  </li><!-- End Components Nav -->
 
-  <li class="nav-item">
-    <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-      <i class="bi bi-card-list"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
-    </a>
-    <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-      <li>
-        <a href="view_category.php">
-          <i class="bi bi-circle"></i><span>View List Category</span>
-        </a>
-      </li>
-      <li>
-        <a href="category.php">
-          <i class="bi bi-circle"></i><span>Create Category</span>
-        </a>
-      </li>
-    </ul>
-  </li><!-- End Forms Nav -->
-
-  <li class="nav-heading">Users</li>
-
-  <li class="nav-item">
-    <a class="nav-link collapsed" href="pages-login.html">
-      <i class="bi bi-box-arrow-left"></i>
-      <span>Logout</span>
-    </a>
-  </li><!-- End Login Page Nav -->
-
-  <li class="nav-item">
-    <a class="nav-link collapsed" href="pages-blank.html">
-      <i class="bi bi-file-earmark"></i>
-      <span>Blank</span>
-    </a>
-  </li><!-- End Blank Page Nav -->
-
-  <li class="nav-item">
-    <a class="nav-link collapsed" href="category.php">
-      <i class="bi bi-book"></i>
-      <span>Category</span>
-    </a>
-  </li>
-
-</ul>
-
-</aside><!-- End Sidebar-->
+  </aside><!-- End Sidebar-->
 
   <main id="main" class="main">
 

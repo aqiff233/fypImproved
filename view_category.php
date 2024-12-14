@@ -72,7 +72,7 @@
             </li><!-- End Dashboard Nav -->
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="index.html">
+                <a class="nav-link collapsed" href="take_order.php">
                     <i class="bi bi-bell-fill"></i>
                     <span>Take Order</span>
                 </a>
