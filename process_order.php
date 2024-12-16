@@ -1,4 +1,8 @@
 <?php
+$user_id = $_COOKIE['user_id'];
+$username = $_COOKIE['username'];
+$role = $_COOKIE['role'];
+
 require_once('mysqli.php');
 global $dbc;
 
