@@ -72,7 +72,7 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link collapse show" href="index.html">
+        <a class="nav-link" href="orders.php">
           <i class="bi bi-list-ul"></i>
           <span>Orders</span>
         </a>
@@ -155,8 +155,8 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">Orders</h5>
-              <table class="table" id="ordersTable">
-                <thead>
+              <table class="table table-striped table-bordered" id="ordersTable">
+                <thead> 
                   <tr>
                     <th scope="col">Order ID</th>
                     <th scope="col">User ID</th>
