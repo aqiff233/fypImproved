@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Create menu</title>
+    <title>POS for Siddiqie</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -15,7 +15,9 @@
 
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+        rel="stylesheet">
 
     <!-- Vendor CSS Files -->
     <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -36,6 +38,18 @@
   * Author: BootstrapMade.com
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
+
+    <style>
+        .card-label {
+            display: block;
+            cursor: pointer;
+        }
+
+        .card-label input[type="checkbox"]:checked+.card {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+    </style>
 </head>
 
 <body>
@@ -82,7 +96,7 @@ $role = $_COOKIE['role'];
         <ul class="sidebar-nav" id="sidebar-nav">
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="dashboard.php">
+                <a class="nav-link collapse show" href="dashboard.php">
                     <i class="bi bi-grid"></i>
                     <span>Dashboard</span>
                 </a>
@@ -109,14 +123,14 @@ $role = $_COOKIE['role'];
                 <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-box-seam"></i><span>Menus</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
-                <ul id="components-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
+                <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                     <li>
                         <a href="view_menu.php">
                             <i class="bi bi-circle"></i><span>View List Menu</span>
                         </a>
                     </li>
                     <li>
-                        <a href="menu.php" class="active">
+                        <a href="menu.php">
                             <i class="bi bi-circle"></i><span>Create Menu</span>
                         </a>
                     </li>
@@ -156,100 +170,31 @@ $role = $_COOKIE['role'];
 
     </aside><!-- End Sidebar-->
 
-
     <main id="main" class="main">
 
         <div class="pagetitle">
-            <h1>Create Item for Menu</h1>
+            <h1>Dashboard</h1>
         </div><!-- End Page Title -->
 
-        <?php
+        <p>id: <?php echo $user_id; ?><br></p>
+        <p>username: <?php echo $username; ?><br></p>
+        <p>role: <?php echo $role; ?><br></p>
 
-        require_once('mysqli.php'); // Connect to the db.
-        global $dbc;
-
-        $query2 = "select category_id, name from categories";
-        $result2 = @mysqli_query($dbc, $query2); // Run the query.
-        $num2 = @mysqli_num_rows($result2);
-
-
-        if (isset($_POST['submitted'])) {
-            $name = $_POST['name'];
-            $price = $_POST['price'];
-            $cat = $_POST['category_id'];
-
-            $query = "INSERT INTO menus (name, price, category_id)
-                        VALUES
-                        ('$name', '$price', '$cat')";
-            $result = @mysqli_query($dbc, $query);
-
-            if (mysqli_affected_rows($dbc) > 0) {
-                echo '<div class="alert alert-success bg-success text-light border-0 alert-dismissible fade show" role="alert">
-                            Success! New item has been created.
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>';
-            } else {
-                echo '<div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
-                        System Error! You could not add due to system error.
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>';
-            }
-        }
-
-        ?>
-
-        <div class="col-xl-6">
-            <div class="card p-4">
-                <form action="menu.php" method="post">
-                    <div class="row gy-4">
-
-                        <div class="col-md-12">
-                            <input type="text" class="form-control" name="name" placeholder="Menu name" required>
+        <section class="section">
+            <div class="row">
+                <div class="col-lg-2">
+                    <label class="card-label">
+                        <input type="checkbox" name="card-selection[]" value="card1" class="d-none">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Card 1</h5>
+                                <p>Content for card 1.</p>
+                            </div>
                         </div>
-
-                        <div class="col-md-3">
-                            <input type="number" class="form-control" name="price" placeholder="Price" required step="0.1">
-                        </div>
-
-                        <div class="col-md-12">
-                            <?php
-
-                            /*
-                            require_once('mysqli.php'); // Connect to the db.
-                            global $dbc;
-
-                            $query2 = "select category_id, name from categories";
-                            $result2 = @mysqli_query($dbc, $query2); // Run the query.
-                            $num2 = @mysqli_num_rows($result2);
-                            */
-
-                            if ($num2 > 0) {
-                                echo '<select class="form-select" name="category_id" aria-label="Default select example" required>
-                                        <option value="" selected>Category</option>';
-
-                                while ($row2 = @mysqli_fetch_array($result2, MYSQLI_ASSOC)) {
-                                    echo '<option value=' . $row2['category_id'] . '>' . $row2['name'] . '</option>';
-                                }
-                            } else {
-                                echo '<p>No categories available.</p>';
-                            }
-                            echo '</select>';
-
-                            ?>
-                        </div>
-
-                        <div class="col-md-12 text-center">
-
-                            <button type="submit" class="btn btn-primary">Confirm</button>
-                            <input type="hidden" name="submitted" value="TRUE" />
-
-                        </div>
-
-                    </div>
-                </form>
+                    </label>
+                </div>
             </div>
-
-        </div>
+        </section>
 
     </main><!-- End #main -->
 
@@ -279,7 +224,18 @@ $role = $_COOKIE['role'];
             document.getElementById("datetime").textContent = formattedDate;
         });
     </script>
-    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    <script>
+        const checkboxes = document.querySelectorAll('input[name="card-selection[]"]');
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                console.log("Card value:", checkbox.value, "Checked state:", checkbox.checked);
+            });
+        });
+    </script>
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+            class="bi bi-arrow-up-short"></i></a>
 
     <!-- Vendor JS Files -->
     <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>

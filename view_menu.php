@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>POS for Siddiqie</title>
+    <title>Menu</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -39,6 +39,18 @@
 </head>
 
 <body>
+<?php
+// Check if the user is logged in via cookies
+if (!isset($_COOKIE['user_id'])) {
+    // If not logged in, redirect to login page
+    header("Location: login.php");
+    exit();
+}
+
+$user_id = $_COOKIE['user_id'];
+$username = $_COOKIE['username'];
+$role = $_COOKIE['role'];
+?>
 
     <!-- ======= Header ======= -->
     <header id="header" class="header fixed-top d-flex align-items-center">
@@ -55,6 +67,11 @@
             <p id="datetime"></p>
         </div>
 
+        <div class="main ms-auto me-3">
+            <i class="ri ri-account-circle-fill"></i>
+            <span><?php echo $username; ?></span>
+        </div>
+
 
 
     </header><!-- End Header -->
@@ -65,26 +82,27 @@
         <ul class="sidebar-nav" id="sidebar-nav">
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="index.html">
+                <a class="nav-link collapsed" href="dashboard.php">
                     <i class="bi bi-grid"></i>
                     <span>Dashboard</span>
                 </a>
             </li><!-- End Dashboard Nav -->
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="index.html">
+                <a class="nav-link collapsed" href="take_order.php">
                     <i class="bi bi-bell-fill"></i>
                     <span>Take Order</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="index.html">
+                <a class="nav-link collapsed" href="orders.php">
                     <i class="bi bi-list-ul"></i>
                     <span>Orders</span>
                 </a>
             </li>
-
+            
+            <?php if ($role == 'admin' || $role == 'manager'): ?>
             <li class="nav-heading">Catalogs</li>
 
             <li class="nav-item">
@@ -104,6 +122,7 @@
                     </li>
                 </ul>
             </li><!-- End Components Nav -->
+            
 
             <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
@@ -122,29 +141,16 @@
                     </li>
                 </ul>
             </li><!-- End Forms Nav -->
+            <?php endif; ?>
 
             <li class="nav-heading">Users</li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="pages-login.html">
+                <a class="nav-link collapsed" href="logout.php">
                     <i class="bi bi-box-arrow-left"></i>
                     <span>Logout</span>
                 </a>
-            </li><!-- End Login Page Nav -->
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="pages-blank.html">
-                    <i class="bi bi-file-earmark"></i>
-                    <span>Blank</span>
-                </a>
-            </li><!-- End Blank Page Nav -->
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="category.php">
-                    <i class="bi bi-book"></i>
-                    <span>Category</span>
-                </a>
-            </li>
+            </li><!-- End Logout Page Nav -->
 
         </ul>
 
