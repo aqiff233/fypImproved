@@ -262,6 +262,9 @@ $role = $_COOKIE['role'];
             <option value="In Progress" ${order.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
             <option value="Paid" ${order.status === 'Paid' ? 'selected' : ''}>Paid</option>
             <option value="Cancelled" ${order.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+            <option value="Ready" ${order.status === 'Ready' ? 'selected' : ''}>Ready</option>
+            <option value="Served" ${order.status === 'Served' ? 'selected' : ''}>Served</option>
+
           `;
         updateStatusDropdownStyle(statusDropdown);
         statusDropdown.addEventListener('change', () => {
@@ -334,20 +337,33 @@ $role = $_COOKIE['role'];
     }
 
     function updateStatusDropdownStyle(selectElement) {
-      selectElement.classList.remove('bg-warning', 'bg-success', 'bg-danger', 'bg-opacity-50');
+  selectElement.classList.remove(
+    "bg-warning",
+    "bg-success",
+    "bg-danger",
+    "bg-info",
+    "bg-primary",
+    "bg-opacity-50"
+  );
 
-      switch (selectElement.value) {
-        case 'In Progress':
-          selectElement.classList.add('bg-warning', 'bg-opacity-50');
-          break;
-        case 'Paid':
-          selectElement.classList.add('bg-success', 'bg-opacity-50');
-          break;
-        case 'Cancelled':
-          selectElement.classList.add('bg-danger', 'bg-opacity-50');
-          break;
-      }
-    }
+  switch (selectElement.value) {
+    case "In Progress":
+      selectElement.classList.add("bg-warning", "bg-opacity-50"); // Yellow
+      break;
+    case "Ready":
+      selectElement.classList.add("bg-primary", "bg-opacity-50"); // Blue
+      break;
+    case "Served":
+      selectElement.classList.add("bg-info", "bg-opacity-50"); // Light Blue/Cyan
+      break;
+    case "Paid":
+      selectElement.classList.add("bg-success", "bg-opacity-50"); // Green
+      break;
+    case "Cancelled":
+      selectElement.classList.add("bg-danger", "bg-opacity-50"); // Red
+      break;
+  }
+}
   </script>
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 

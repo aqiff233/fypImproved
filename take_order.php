@@ -296,13 +296,12 @@ $role = $_COOKIE['role'];
         <div class="offcanvas-body">
             <!-- Table Number Dropdown -->
             <div class="mb-3">
-                <label for="tableNumber" class="form-label">Table Number:</label>
-                <select class="form-select" id="tableNumber">
-                    <?php for ($i = 1; $i <= 20; $i++): ?>
-                        <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
-                    <?php endfor; ?>
-                </select>
-            </div>
+  <label for="tableNumber" class="form-label">Table Number:</label>
+  <select class="form-select" id="tableNumber">
+    <!-- Options will be loaded here by JavaScript -->
+  </select>
+</div>
+
 
             <!-- Cart Items List -->
             <ul id="cartItems"></ul>
@@ -335,6 +334,7 @@ $role = $_COOKIE['role'];
     <script>
     document.addEventListener("DOMContentLoaded", () => {
         // Get the current date and format it
+        updateTableDropdown();
         const now = new Date();
         const options = {
             weekday: 'long',
@@ -510,6 +510,32 @@ $role = $_COOKIE['role'];
             }
         });
 
+        function updateTableDropdown() {
+            fetch('process_order.php?action=get_unavailable_tables')
+      .then(response => response.json())
+      .then(availableTables => {
+        const tableDropdown = document.getElementById('tableNumber');
+        tableDropdown.innerHTML = ''; // Clear existing options
+
+        // Add "Takeout" option
+        const takeoutOption = document.createElement('option');
+        takeoutOption.value = '0';
+        takeoutOption.text = 'Takeout';
+        tableDropdown.add(takeoutOption);
+
+        // Add available table numbers
+        for (let i = 1; i <= 20; i++) {
+          if (!availableTables.includes(i)) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.text = i;
+            tableDropdown.add(option);
+          }
+        }
+      })
+      .catch(error => console.error('Error fetching available tables:', error));
+  }
+
         document.getElementById('confirmOrder').addEventListener('click', () => {
             const tableNumber = document.getElementById('tableNumber').value;
 
@@ -558,6 +584,7 @@ $role = $_COOKIE['role'];
                 .then(data => {
                     // Handle the response from the server (e.g., show a success message)
                     console.log('Order processed successfully:', data);
+                    updateTableDropdown();
 
                     // Optionally reset the cart and close the offcanvas
                     cartItems = {};

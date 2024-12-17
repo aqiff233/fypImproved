@@ -49,6 +49,19 @@ function getOrdersForToday($dbc) {
     return $orders;
 }
 
+function getUnavailableTables($dbc) {
+    $sql = "SELECT table_number FROM orders WHERE status = 'In Progress'";
+    $result = $dbc->query($sql);
+
+    $tablesInProgress = [];
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $tablesInProgress[] = (int)$row['table_number'];
+        }
+    }
+    return $tablesInProgress;
+}
+
 // Handle different actions based on the 'action' parameter
 if (isset($_GET['action'])) {
     $action = $_GET['action'];
@@ -67,7 +80,7 @@ if (isset($_GET['action'])) {
         $newStatus = $_POST['new_status'];
 
         // Validate the status
-        if (!in_array($newStatus, ['In Progress', 'Paid', 'Cancelled'])) {
+        if (!in_array($newStatus, ['In Progress', 'Paid', 'Cancelled', 'Ready','Served'])) {
             http_response_code(400); // Bad Request
             echo json_encode(['error' => 'Invalid status']);
             exit;
@@ -84,6 +97,15 @@ if (isset($_GET['action'])) {
             http_response_code(500); // Internal Server Error
             echo json_encode(['error' => 'Failed to update order status']);
         }
+        exit;
+    }
+    elseif ($action === 'get_unavailable_tables') {
+        // Get unavailable tables
+        $unavailableTables = getUnavailableTables($dbc);
+
+        // Return the list as JSON
+        header('Content-Type: application/json');
+        echo json_encode($unavailableTables);
         exit;
     }
 }
