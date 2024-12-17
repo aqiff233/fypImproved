@@ -236,7 +236,7 @@
         </div>
 
 
-        <div class="col-xl-9 mx-auto">
+        <div class="col-xl-12">
             <div class="card p-4">
 
                 <div class="pagetitle">
@@ -245,7 +245,7 @@
                 <form action="view_category.php" method="post">
                     <div class="row gy-4">
 
-                        <div class="col-md-12">
+                        <div class="col-md-2">
                             <?php
 
                             if ($num2 > 0) {
@@ -262,7 +262,7 @@
 
                             ?>
                         </div>
-
+                            
                         <div class="col-md-12">
                             <input type="text" class="form-control" name="name" placeholder="Category name" required>
                         </div>
