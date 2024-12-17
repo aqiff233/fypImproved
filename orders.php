@@ -50,7 +50,7 @@ $role = $_COOKIE['role'];
     <header id="header" class="header fixed-top d-flex align-items-center">
 
         <div class="d-flex align-items-center justify-content-between">
-            <a href="index.html" class="logo d-flex align-items-center">
+            <a href="dashboard.php" class="logo d-flex align-items-center">
                 <span class="d-none d-lg-block mx-auto">SIDDIQIE</span>
             </a>
             <i class="bi bi-list toggle-sidebar-btn"></i>
@@ -91,8 +91,15 @@ $role = $_COOKIE['role'];
 
             <li class="nav-item">
                 <a class="nav-link collapse show" href="orders.php">
-                    <i class="bi bi-list-ul"></i>
+                    <i class="bi bi-card-text"></i>
                     <span>Orders</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="tickets.php">
+                    <i class="bi bi-card-heading"></i>
+                    <span>Tickets</span>
                 </a>
             </li>
             
