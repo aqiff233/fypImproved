@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>POS for Siddiqie</title>
+  <title>POS for Siddiqie - Tickets</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -30,26 +30,6 @@
 
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
-
-  <!-- =======================================================
-  * Template Name: NiceAdmin
-  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-  * Updated: Apr 20 2024 with Bootstrap v5.3.3
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
-
-  <style>
-    .card-label {
-      display: block;
-      cursor: pointer;
-    }
-
-    .card-label input[type="checkbox"]:checked+.card {
-      border-color: #007bff;
-      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-    }
-  </style>
 </head>
 
 <body>
@@ -167,43 +147,80 @@
   <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Blank Page</h1>
+      <h1>Tickets</h1>
     </div><!-- End Page Title -->
 
-
+    <section class="section tickets">
+      <div class="row" id="ticketContainer">
+        <!-- Tickets will be loaded here -->
+      </div>
+    </section>
 
   </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
     <div class="copyright">
-      &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
+      © Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
     </div>
     <div class="credits">
-      <!-- All the links in the footer should remain intact. -->
-      <!-- You can delete the links only if you purchased the pro version. -->
-      <!-- Licensing information: https://bootstrapmade.com/license/ -->
-      <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
       Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
     </div>
   </footer><!-- End Footer -->
+
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const now = new Date();
       const options = { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' };
       const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(now);
       document.getElementById("datetime").textContent = formattedDate;
-    });
-  </script>
 
-  <script>
-    const checkboxes = document.querySelectorAll('input[name="card-selection[]"]');
-
-    checkboxes.forEach(checkbox => {
-      checkbox.addEventListener('change', () => {
-        console.log("Card value:", checkbox.value, "Checked state:", checkbox.checked);
-      });
+      fetchTickets();
+      setInterval(fetchTickets, 5000); // Refresh every 5 seconds
     });
+
+    function fetchTickets() {
+      fetch('process_order.php?action=fetch_tickets')
+        .then(response => response.json())
+        .then(tickets => displayTickets(tickets))
+        .catch(error => console.error('Error fetching tickets:', error));
+    }
+
+    function displayTickets(tickets) {
+      const ticketContainer = document.getElementById('ticketContainer');
+      ticketContainer.innerHTML = ''; // Clear existing tickets
+
+      if (Object.keys(tickets).length === 0) {
+        // Display a message when no tickets are found
+        const noTicketsMessage = document.createElement('div');
+        noTicketsMessage.classList.add('col-12', 'text-center');
+        noTicketsMessage.innerHTML = '<p>No tickets available at the moment.</p>';
+        ticketContainer.appendChild(noTicketsMessage);
+        return; // Exit the function early
+      }
+
+      for (const orderId in tickets) {
+        const ticket = tickets[orderId];
+
+        const ticketElement = document.createElement('div');
+        ticketElement.classList.add('col-lg-4', 'col-md-6', 'mb-3');
+        ticketElement.innerHTML = `
+        <a href="payment.php?order_id=${ticket.order_id}" class="card-link">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Table: ${ticket.table_number}</h5>
+              <p class="card-text">Order ID: ${ticket.order_id}</p>
+              <p class="card-text">Status: ${ticket.status}</p>
+              <p class="card-text">Total: RM${ticket.total_price}</p>
+              <p class="card-text">Taken by: ${ticket.username || 'N/A'}</p>
+            </div>
+          </div>
+          </a>
+        `;
+
+        ticketContainer.appendChild(ticketElement);
+      }
+    }
   </script>
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
