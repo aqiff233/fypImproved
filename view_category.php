@@ -148,6 +148,15 @@
                         </li>
                     </ul>
                 </li><!-- End Forms Nav -->
+
+                <li class="nav-heading">Report</li>
+
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="report.php">
+                        <i class="bi bi-folder"></i>
+                        <span>Sales</span>
+                    </a>
+                </li>
             <?php endif; ?>
 
             <li class="nav-heading">Users</li>

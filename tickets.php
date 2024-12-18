@@ -33,130 +33,139 @@
 </head>
 
 <body>
-<?php
-// Check if the user is logged in via cookies
-if (!isset($_COOKIE['user_id'])) {
+  <?php
+  // Check if the user is logged in via cookies
+  if (!isset($_COOKIE['user_id'])) {
     // If not logged in, redirect to login page
     header("Location: login.php");
     exit();
-}
+  }
 
-$user_id = $_COOKIE['user_id'];
-$username = $_COOKIE['username'];
-$role = $_COOKIE['role'];
-?>
-
-
-    <!-- ======= Header ======= -->
-    <header id="header" class="header fixed-top d-flex align-items-center">
-
-        <div class="d-flex align-items-center justify-content-between">
-            <a href="dashboard.php" class="logo d-flex align-items-center">
-                <span class="d-none d-lg-block mx-auto">SIDDIQIE</span>
-            </a>
-            <i class="bi bi-list toggle-sidebar-btn"></i>
-
-        </div><!-- End Logo -->
-
-        <div class="main mt-3 ms-3">
-            <p id="datetime"></p>
-        </div>
-
-        <div class="main ms-auto me-3">
-            <i class="ri ri-account-circle-fill"></i>
-            <span><?php echo $username; ?></span>
-        </div>
+  $user_id = $_COOKIE['user_id'];
+  $username = $_COOKIE['username'];
+  $role = $_COOKIE['role'];
+  ?>
 
 
+  <!-- ======= Header ======= -->
+  <header id="header" class="header fixed-top d-flex align-items-center">
 
-    </header><!-- End Header -->
+    <div class="d-flex align-items-center justify-content-between">
+      <a href="dashboard.php" class="logo d-flex align-items-center">
+        <span class="d-none d-lg-block mx-auto">SIDDIQIE</span>
+      </a>
+      <i class="bi bi-list toggle-sidebar-btn"></i>
 
-    <!-- ======= Sidebar ======= -->
-    <aside id="sidebar" class="sidebar">
+    </div><!-- End Logo -->
 
-        <ul class="sidebar-nav" id="sidebar-nav">
+    <div class="main mt-3 ms-3">
+      <p id="datetime"></p>
+    </div>
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="dashboard.php">
-                    <i class="bi bi-grid"></i>
-                    <span>Dashboard</span>
-                </a>
-            </li><!-- End Dashboard Nav -->
+    <div class="main ms-auto me-3">
+      <i class="ri ri-account-circle-fill"></i>
+      <span><?php echo $username; ?></span>
+    </div>
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="take_order.php">
-                    <i class="bi bi-bell-fill"></i>
-                    <span>Take Order</span>
-                </a>
+
+
+  </header><!-- End Header -->
+
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="dashboard.php">
+          <i class="bi bi-grid"></i>
+          <span>Dashboard</span>
+        </a>
+      </li><!-- End Dashboard Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="take_order.php">
+          <i class="bi bi-bell-fill"></i>
+          <span>Take Order</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="orders.php">
+          <i class="bi bi-list-ul"></i>
+          <span>Orders</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link collapse show" href="tickets.php">
+          <i class="bi bi-card-heading"></i>
+          <span>Tickets</span>
+        </a>
+      </li>
+
+      <?php if ($role == 'admin' || $role == 'manager'): ?>
+        <li class="nav-heading">Catalogs</li>
+
+        <li class="nav-item">
+          <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+            <i class="bi bi-box-seam"></i><span>Menus</span><i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            <li>
+              <a href="view_menu.php">
+                <i class="bi bi-circle"></i><span>View List Menu</span>
+              </a>
             </li>
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="orders.php">
-                    <i class="bi bi-card-text"></i>
-                    <span>Orders</span>
-                </a>
+            <li>
+              <a href="menu.php">
+                <i class="bi bi-circle"></i><span>Create Menu</span>
+              </a>
             </li>
+          </ul>
+        </li><!-- End Components Nav -->
 
-            <li class="nav-item">
-                <a class="nav-link collapse show" href="tickets.php">
-                    <i class="bi bi-card-heading"></i>
-                    <span>Tickets</span>
-                </a>
+
+        <li class="nav-item">
+          <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+            <i class="bi bi-card-list"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            <li>
+              <a href="view_category.php">
+                <i class="bi bi-circle"></i><span>View List Category</span>
+              </a>
             </li>
-            
-            <?php if ($role == 'admin' || $role == 'manager'): ?>
-            <li class="nav-heading">Catalogs</li>
+            <li>
+              <a href="category.php">
+                <i class="bi bi-circle"></i><span>Create Category</span>
+              </a>
+            </li>
+          </ul>
+        </li><!-- End Forms Nav -->
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-box-seam"></i><span>Menus</span><i class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="view_menu.php">
-                            <i class="bi bi-circle"></i><span>View List Menu</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="menu.php">
-                            <i class="bi bi-circle"></i><span>Create Menu</span>
-                        </a>
-                    </li>
-                </ul>
-            </li><!-- End Components Nav -->
-            
+        <li class="nav-heading">Report</li>
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-card-list"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="view_category.php">
-                            <i class="bi bi-circle"></i><span>View List Category</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="category.php">
-                            <i class="bi bi-circle"></i><span>Create Category</span>
-                        </a>
-                    </li>
-                </ul>
-            </li><!-- End Forms Nav -->
-            <?php endif; ?>
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="report.php">
+            <i class="bi bi-folder"></i>
+            <span>Sales</span>
+          </a>
+        </li>
+      <?php endif; ?>
 
-            <li class="nav-heading">Users</li>
+      <li class="nav-heading">Users</li>
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="logout.php">
-                    <i class="bi bi-box-arrow-left"></i>
-                    <span>Logout</span>
-                </a>
-            </li><!-- End Logout Page Nav -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="logout.php">
+          <i class="bi bi-box-arrow-left"></i>
+          <span>Logout</span>
+        </a>
+      </li><!-- End Logout Page Nav -->
 
-        </ul>
+    </ul>
 
-    </aside><!-- End Sidebar-->
+  </aside><!-- End Sidebar-->
 
   <main id="main" class="main">
 
@@ -185,7 +194,12 @@ $role = $_COOKIE['role'];
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const now = new Date();
-      const options = { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' };
+      const options = {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+      };
       const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(now);
       document.getElementById("datetime").textContent = formattedDate;
 
