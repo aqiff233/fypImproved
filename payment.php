@@ -342,8 +342,6 @@ $role = $_COOKIE['role'];
           <div class="payment-method-buttons btn-group" role="group" aria-label="Payment Methods">
             <button type="button" class="btn btn-outline-primary active" data-method="cash">Cash</button>
             <button type="button" class="btn btn-outline-primary" data-method="card">Card</button>
-            <button type="button" class="btn btn-outline-primary" data-method="qr">QR</button>
-            <button type="button" class="btn btn-outline-primary" data-method="online">Online</button>
           </div>
           <div class="payment-method-content">
             <!-- Content will be loaded here based on selected method -->
@@ -446,7 +444,7 @@ $role = $_COOKIE['role'];
             switch (method) {
               case 'cash':
             contentContainer.innerHTML = `
-                <div class="total-cost">RM${totalCost}</div>
+                
                 <div class="cash-input-group">
                     <i class="bi bi-cash-coin"></i>
                     <input type="number" id="cashReceived" class="form-control" placeholder="Cash Received">
@@ -467,24 +465,21 @@ $role = $_COOKIE['role'];
                 handleCashPayment(orderId);
             });
             break;
-        case 'card':
-          contentContainer.innerHTML = `
-            <p>Please use the card reader to complete the payment.</p>
-            <!-- Add more content/integration with card reader here -->
-          `;
-          break;
-        case 'qr':
-          contentContainer.innerHTML = `
-            <p>Please scan the QR code below to complete the payment.</p>
-            <!-- Add QR code image or generator here -->
-          `;
-          break;
-        case 'online':
-          contentContainer.innerHTML = `
-            <p>Please follow the instructions on your device to complete the online payment.</p>
-            <!-- Add more content/integration with online payment gateway here -->
-          `;
-          break;
+            case 'card':
+            contentContainer.innerHTML = `
+                <div class="cash-input-group">
+                    <i class="bi bi-credit-card"></i>
+                    <input type="text" id="cardAmount" class="form-control" value="RM${totalCost}" readonly>
+                    <button class="btn btn-primary" id="chargeButton">Charge</button>
+                </div>
+                <div id="paymentMessage" class="mt-3"></div>
+            `;
+
+            // Add event listener to the charge button dynamically
+            document.getElementById('chargeButton').addEventListener('click', () => {
+                handleCardPayment(orderId, parseFloat(totalCost));
+            });
+            break;
         default:
           contentContainer.innerHTML = '<p>Select a payment method above.</p>';
       }
@@ -528,13 +523,36 @@ $role = $_COOKIE['role'];
             }
         }
 
+        function handleCardPayment(orderId, amount) {
+    const paymentMessageContainer = document.getElementById('paymentMessage');
+    paymentMessageContainer.innerHTML = ''; // Clear previous messages
+
+    // In a real application, you would integrate with a payment gateway here.
+    // This is just a placeholder to simulate the payment process.
+    console.log("Charging card for order ID:", orderId, "Amount:", amount);
+
+    // Simulate payment processing delay
+    setTimeout(() => {
+        // Assume the payment is successful for now
+        const paymentResult = { success: true };
+
+        if (paymentResult.success) {
+            paymentMessageContainer.innerHTML = '<p class="text-success">Payment successful!</p>';
+            // Update payment and order status
+            updatePaymentAndOrderStatus(orderId, amount, 'Credit/Debit Card', 0); // Change is 0 for card payments
+        } else {
+            paymentMessageContainer.innerHTML = '<p class="error-message">Payment failed. Please try again.</p>';
+        }
+    }, 1000); // 1-second delay
+}
+
         function updatePaymentAndOrderStatus(orderId, totalCost, paymentMethod, change) {
             const formData = new FormData();
             formData.append('order_id', orderId);
             formData.append('payment_amount', totalCost);
             formData.append('payment_method', paymentMethod);
             formData.append('payment_status', 'Completed'); // Assuming immediate completion for cash
-            console.log("Order ID being used in updatePaymentAndOrderStatus :", orderId);
+            console.log("Order ID being used in updatePaymentAndOrderStatus :", orderId); 
             // First, update the payment status
             fetch('process_order.php?action=update_payment', {
                 method: 'POST',
