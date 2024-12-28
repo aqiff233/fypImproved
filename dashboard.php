@@ -53,18 +53,18 @@
 </head>
 
 <body>
-<?php
-// Check if the user is logged in via cookies
-if (!isset($_COOKIE['user_id'])) {
-    // If not logged in, redirect to login page
-    header("Location: login.php");
-    exit();
-}
+    <?php
+    // Check if the user is logged in via cookies
+    if (!isset($_COOKIE['user_id'])) {
+        // If not logged in, redirect to login page
+        header("Location: login.php");
+        exit();
+    }
 
-$user_id = $_COOKIE['user_id'];
-$username = $_COOKIE['username'];
-$role = $_COOKIE['role'];
-?>
+    $user_id = $_COOKIE['user_id'];
+    $username = $_COOKIE['username'];
+    $role = $_COOKIE['role'];
+    ?>
 
     <!-- ======= Header ======= -->
     <header id="header" class="header fixed-top d-flex align-items-center">
@@ -122,46 +122,55 @@ $role = $_COOKIE['role'];
                     <span>Tickets</span>
                 </a>
             </li>
-            
+
             <?php if ($role == 'admin' || $role == 'manager'): ?>
-            <li class="nav-heading">Catalogs</li>
+                <li class="nav-heading">Catalogs</li>
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-box-seam"></i><span>Menus</span><i class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="view_menu.php">
-                            <i class="bi bi-circle"></i><span>View List Menu</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="menu.php">
-                            <i class="bi bi-circle"></i><span>Create Menu</span>
-                        </a>
-                    </li>
-                </ul>
-            </li><!-- End Components Nav -->
-            
+                <li class="nav-item">
+                    <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+                        <i class="bi bi-box-seam"></i><span>Menus</span><i class="bi bi-chevron-down ms-auto"></i>
+                    </a>
+                    <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                        <li>
+                            <a href="view_menu.php">
+                                <i class="bi bi-circle"></i><span>View List Menu</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="menu.php">
+                                <i class="bi bi-circle"></i><span>Create Menu</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li><!-- End Components Nav -->
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-card-list"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="view_category.php">
-                            <i class="bi bi-circle"></i><span>View List Category</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="category.php">
-                            <i class="bi bi-circle"></i><span>Create Category</span>
-                        </a>
-                    </li>
-                </ul>
-            </li><!-- End Forms Nav -->
+
+                <li class="nav-item">
+                    <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+                        <i class="bi bi-card-list"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
+                    </a>
+                    <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                        <li>
+                            <a href="view_category.php">
+                                <i class="bi bi-circle"></i><span>View List Category</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="category.php">
+                                <i class="bi bi-circle"></i><span>Create Category</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li><!-- End Forms Nav -->
+
+                <li class="nav-heading">Report</li>
+
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="report.php">
+                        <i class="bi bi-folder"></i>
+                        <span>Sales</span>
+                    </a>
+                </li>
             <?php endif; ?>
 
             <li class="nav-heading">Users</li>

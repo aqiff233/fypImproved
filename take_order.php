@@ -104,18 +104,18 @@ if ($menuItemsResult->num_rows > 0) {
 
 <body>
 
-<?php
-// Check if the user is logged in via cookies
-if (!isset($_COOKIE['user_id'])) {
-    // If not logged in, redirect to login page
-    header("Location: login.php");
-    exit();
-}
+    <?php
+    // Check if the user is logged in via cookies
+    if (!isset($_COOKIE['user_id'])) {
+        // If not logged in, redirect to login page
+        header("Location: login.php");
+        exit();
+    }
 
-$user_id = $_COOKIE['user_id'];
-$username = $_COOKIE['username'];
-$role = $_COOKIE['role'];
-?>
+    $user_id = $_COOKIE['user_id'];
+    $username = $_COOKIE['username'];
+    $role = $_COOKIE['role'];
+    ?>
 
     <!-- ======= Header ======= -->
     <header id="header" class="header fixed-top d-flex align-items-center">
@@ -173,46 +173,55 @@ $role = $_COOKIE['role'];
                     <span>Tickets</span>
                 </a>
             </li>
-            
+
             <?php if ($role == 'admin' || $role == 'manager'): ?>
-            <li class="nav-heading">Catalogs</li>
+                <li class="nav-heading">Catalogs</li>
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-box-seam"></i><span>Menus</span><i class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="view_menu.php">
-                            <i class="bi bi-circle"></i><span>View List Menu</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="menu.php">
-                            <i class="bi bi-circle"></i><span>Create Menu</span>
-                        </a>
-                    </li>
-                </ul>
-            </li><!-- End Components Nav -->
-            
+                <li class="nav-item">
+                    <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+                        <i class="bi bi-box-seam"></i><span>Menus</span><i class="bi bi-chevron-down ms-auto"></i>
+                    </a>
+                    <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                        <li>
+                            <a href="view_menu.php">
+                                <i class="bi bi-circle"></i><span>View List Menu</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="menu.php">
+                                <i class="bi bi-circle"></i><span>Create Menu</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li><!-- End Components Nav -->
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-card-list"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="view_category.php">
-                            <i class="bi bi-circle"></i><span>View List Category</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="category.php">
-                            <i class="bi bi-circle"></i><span>Create Category</span>
-                        </a>
-                    </li>
-                </ul>
-            </li><!-- End Forms Nav -->
+
+                <li class="nav-item">
+                    <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+                        <i class="bi bi-card-list"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
+                    </a>
+                    <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                        <li>
+                            <a href="view_category.php">
+                                <i class="bi bi-circle"></i><span>View List Category</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="category.php">
+                                <i class="bi bi-circle"></i><span>Create Category</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li><!-- End Forms Nav -->
+
+                <li class="nav-heading">Report</li>
+
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="report.php">
+                        <i class="bi bi-folder"></i>
+                        <span>Sales</span>
+                    </a>
+                </li>
             <?php endif; ?>
 
             <li class="nav-heading">Users</li>
@@ -303,11 +312,11 @@ $role = $_COOKIE['role'];
         <div class="offcanvas-body">
             <!-- Table Number Dropdown -->
             <div class="mb-3">
-  <label for="tableNumber" class="form-label">Table Number:</label>
-  <select class="form-select" id="tableNumber">
-    <!-- Options will be loaded here by JavaScript -->
-  </select>
-</div>
+                <label for="tableNumber" class="form-label">Table Number:</label>
+                <select class="form-select" id="tableNumber">
+                    <!-- Options will be loaded here by JavaScript -->
+                </select>
+            </div>
 
 
             <!-- Cart Items List -->
@@ -339,232 +348,232 @@ $role = $_COOKIE['role'];
     //previous php code is the same
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        // Get the current date and format it
-        updateTableDropdown();
-        const now = new Date();
-        const options = {
-            weekday: 'long',
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric'
-        };
-        const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(now);
-        document.getElementById("datetime").textContent = formattedDate;
+        document.addEventListener("DOMContentLoaded", () => {
+            // Get the current date and format it
+            updateTableDropdown();
+            const now = new Date();
+            const options = {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            };
+            const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(now);
+            document.getElementById("datetime").textContent = formattedDate;
 
-        // Offcanvas and Menu Filtering Script
-        const navLinks = document.querySelectorAll('.filter-link'); // Select only filter links
-        const menuCards = document.querySelectorAll('.menu-card');
-        const cartItemsList = document.getElementById('cartItems');
-        const cartTotalElement = document.getElementById('cartTotal');
-        let cartTotal = 0;
-        let cartItems = {}; // Object to track items in the cart
-        const cartOffcanvas = new bootstrap.Offcanvas(document.getElementById('cartOffcanvas'));
+            // Offcanvas and Menu Filtering Script
+            const navLinks = document.querySelectorAll('.filter-link'); // Select only filter links
+            const menuCards = document.querySelectorAll('.menu-card');
+            const cartItemsList = document.getElementById('cartItems');
+            const cartTotalElement = document.getElementById('cartTotal');
+            let cartTotal = 0;
+            let cartItems = {}; // Object to track items in the cart
+            const cartOffcanvas = new bootstrap.Offcanvas(document.getElementById('cartOffcanvas'));
 
-        // Get the "Cancel" button element
-        const cancelButton = document.querySelector('.offcanvas .btn-secondary');
+            // Get the "Cancel" button element
+            const cancelButton = document.querySelector('.offcanvas .btn-secondary');
 
-        // --- Main Content Resizing ---
-        const body = document.body;
-        const mainContent = document.getElementById('main-content'); // Get the main content wrapper
+            // --- Main Content Resizing ---
+            const body = document.body;
+            const mainContent = document.getElementById('main-content'); // Get the main content wrapper
 
-        // Add a 'shown.bs.offcanvas' event listener to the offcanvas
-        cartOffcanvas._element.addEventListener('shown.bs.offcanvas', () => {
-            body.classList.add('offcanvas-open');
-        });
-
-        // Add a 'hidden.bs.offcanvas' event listener to the offcanvas
-        cartOffcanvas._element.addEventListener('hidden.bs.offcanvas', () => {
-            body.classList.remove('offcanvas-open');
-        });
-        // --- End of Main Content Resizing ---
-
-        function filterMenuItems(categoryId) {
-            menuCards.forEach(card => {
-                const cardCategoryId = card.dataset.categoryId;
-                if (categoryId === 'all' || categoryId === cardCategoryId) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
+            // Add a 'shown.bs.offcanvas' event listener to the offcanvas
+            cartOffcanvas._element.addEventListener('shown.bs.offcanvas', () => {
+                body.classList.add('offcanvas-open');
             });
-        }
 
-        // --- Initial Filtering Fix ---
-        // Get the active category link (the first one)
-        const activeNavLink = document.querySelector('.filter-link.active'); // Use .filter-link here too
-        const initialCategoryId = activeNavLink ? activeNavLink.dataset.categoryId : 'all';
-
-        // Filter menu items based on the active category
-        filterMenuItems(initialCategoryId);
-        // --- End of Initial Filtering Fix ---
-
-        navLinks.forEach(link => {
-            link.addEventListener('click', function(event) {
-                event.preventDefault(); // Only prevents default for filter links
-                const categoryId = this.dataset.categoryId;
-
-                navLinks.forEach(navLink => navLink.classList.remove('active'));
-                this.classList.add('active');
-
-                filterMenuItems(categoryId);
+            // Add a 'hidden.bs.offcanvas' event listener to the offcanvas
+            cartOffcanvas._element.addEventListener('hidden.bs.offcanvas', () => {
+                body.classList.remove('offcanvas-open');
             });
-        });
+            // --- End of Main Content Resizing ---
 
-        // Function to check for menu item availability updates
-        let lastUpdate = 0; // Timestamp of the last update check
-
-        function checkForUpdates() {
-            fetch(`check_updates.php?last_update=${lastUpdate}`)
-                .then(response => response.json())
-                .then(data => {
-                    lastUpdate = data.current_timestamp; // Update the lastUpdate timestamp
-
-                    if (data.updates.length > 0) {
-                        data.updates.forEach(update => {
-                            const itemId = update.menus_id;
-                            const isAvailable = update.availability == 1;
-
-                            // Find the corresponding menu card
-                            const card = document.querySelector(`.menu-card[data-item-id="${itemId}"]`);
-                            if (card) {
-                                if (isAvailable) {
-                                    card.classList.remove("disabled");
-                                    //card.style.backgroundColor = "#f5f5f5";
-                                } else {
-                                    card.classList.add("disabled");
-                                    //card.style.backgroundColor = "#e9ecef";
-                                }
-                            }
-                        });
-                    }
-                })
-                .catch(error => console.error("Error checking for updates:", error));
-        }
-
-        // Initial check for updates and then poll every 1 seconds (adjust as needed)
-
-        checkForUpdates();
-        setInterval(checkForUpdates, 1000);
-
-        // Handle adding items to the cart
-        menuCards.forEach(card => {
-            card.addEventListener('click', () => {
-                if (!card.classList.contains('disabled')) {
-                    const itemId = card.dataset.itemId;
-                    const itemName = card.dataset.itemName;
-                    const itemPrice = parseFloat(card.dataset.itemPrice);
-
-                    // Check if the item is already in the cart
-                    if (cartItems[itemId]) {
-                        // Increment quantity and update total price
-                        cartItems[itemId].quantity++;
-                        cartItems[itemId].totalPrice += itemPrice;
+            function filterMenuItems(categoryId) {
+                menuCards.forEach(card => {
+                    const cardCategoryId = card.dataset.categoryId;
+                    if (categoryId === 'all' || categoryId === cardCategoryId) {
+                        card.style.display = 'block';
                     } else {
-                        // Add new item to cart
-                        cartItems[itemId] = {
-                            name: itemName,
-                            price: itemPrice,
-                            quantity: 1,
-                            totalPrice: itemPrice
-                        };
+                        card.style.display = 'none';
                     }
+                });
+            }
 
-                    // Update cart items list in the offcanvas
-                    updateCartDisplay();
+            // --- Initial Filtering Fix ---
+            // Get the active category link (the first one)
+            const activeNavLink = document.querySelector('.filter-link.active'); // Use .filter-link here too
+            const initialCategoryId = activeNavLink ? activeNavLink.dataset.categoryId : 'all';
 
-                    // Show the offcanvas
-                    cartOffcanvas.show();
-                }
+            // Filter menu items based on the active category
+            filterMenuItems(initialCategoryId);
+            // --- End of Initial Filtering Fix ---
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(event) {
+                    event.preventDefault(); // Only prevents default for filter links
+                    const categoryId = this.dataset.categoryId;
+
+                    navLinks.forEach(navLink => navLink.classList.remove('active'));
+                    this.classList.add('active');
+
+                    filterMenuItems(categoryId);
+                });
             });
-        });
 
-        function updateCartDisplay() {
-            cartItemsList.innerHTML = ''; // Clear the list
-            cartTotal = 0; // Reset total
+            // Function to check for menu item availability updates
+            let lastUpdate = 0; // Timestamp of the last update check
 
-            for (const itemId in cartItems) {
-                const item = cartItems[itemId];
-                const itemTotalPrice = item.price * item.quantity;
-                cartTotal += itemTotalPrice;
+            function checkForUpdates() {
+                fetch(`check_updates.php?last_update=${lastUpdate}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        lastUpdate = data.current_timestamp; // Update the lastUpdate timestamp
 
-                // Create list item with quantity and delete button
-                const cartItem = document.createElement('li');
-                cartItem.innerHTML = `
+                        if (data.updates.length > 0) {
+                            data.updates.forEach(update => {
+                                const itemId = update.menus_id;
+                                const isAvailable = update.availability == 1;
+
+                                // Find the corresponding menu card
+                                const card = document.querySelector(`.menu-card[data-item-id="${itemId}"]`);
+                                if (card) {
+                                    if (isAvailable) {
+                                        card.classList.remove("disabled");
+                                        //card.style.backgroundColor = "#f5f5f5";
+                                    } else {
+                                        card.classList.add("disabled");
+                                        //card.style.backgroundColor = "#e9ecef";
+                                    }
+                                }
+                            });
+                        }
+                    })
+                    .catch(error => console.error("Error checking for updates:", error));
+            }
+
+            // Initial check for updates and then poll every 1 seconds (adjust as needed)
+
+            checkForUpdates();
+            setInterval(checkForUpdates, 1000);
+
+            // Handle adding items to the cart
+            menuCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    if (!card.classList.contains('disabled')) {
+                        const itemId = card.dataset.itemId;
+                        const itemName = card.dataset.itemName;
+                        const itemPrice = parseFloat(card.dataset.itemPrice);
+
+                        // Check if the item is already in the cart
+                        if (cartItems[itemId]) {
+                            // Increment quantity and update total price
+                            cartItems[itemId].quantity++;
+                            cartItems[itemId].totalPrice += itemPrice;
+                        } else {
+                            // Add new item to cart
+                            cartItems[itemId] = {
+                                name: itemName,
+                                price: itemPrice,
+                                quantity: 1,
+                                totalPrice: itemPrice
+                            };
+                        }
+
+                        // Update cart items list in the offcanvas
+                        updateCartDisplay();
+
+                        // Show the offcanvas
+                        cartOffcanvas.show();
+                    }
+                });
+            });
+
+            function updateCartDisplay() {
+                cartItemsList.innerHTML = ''; // Clear the list
+                cartTotal = 0; // Reset total
+
+                for (const itemId in cartItems) {
+                    const item = cartItems[itemId];
+                    const itemTotalPrice = item.price * item.quantity;
+                    cartTotal += itemTotalPrice;
+
+                    // Create list item with quantity and delete button
+                    const cartItem = document.createElement('li');
+                    cartItem.innerHTML = `
                     <span>${item.name} (RM${item.price.toFixed(2)}) x ${item.quantity}</span>
                     <button class="btn btn-sm btn-outline-danger delete-item-btn" data-item-id="${itemId}">
                         <i class="bi bi-dash"></i>
                     </button>
                 `;
-                cartItemsList.appendChild(cartItem);
-            }
-
-            // Update total
-            cartTotalElement.textContent = cartTotal.toFixed(2);
-        }
-
-        // Event delegation for delete buttons
-        cartItemsList.addEventListener('click', (event) => {
-            if (event.target.classList.contains('delete-item-btn')) {
-                const itemId = event.target.dataset.itemId;
-                if (cartItems[itemId].quantity > 1) {
-                    cartItems[itemId].quantity--;
-                    cartItems[itemId].totalPrice -= cartItems[itemId].price;
-                } else {
-                    delete cartItems[itemId];
+                    cartItemsList.appendChild(cartItem);
                 }
-                updateCartDisplay();
+
+                // Update total
+                cartTotalElement.textContent = cartTotal.toFixed(2);
             }
-        });
 
-        function updateTableDropdown() {
-            fetch('process_order.php?action=get_unavailable_tables')
-      .then(response => response.json())
-      .then(availableTables => {
-        const tableDropdown = document.getElementById('tableNumber');
-        tableDropdown.innerHTML = ''; // Clear existing options
+            // Event delegation for delete buttons
+            cartItemsList.addEventListener('click', (event) => {
+                if (event.target.classList.contains('delete-item-btn')) {
+                    const itemId = event.target.dataset.itemId;
+                    if (cartItems[itemId].quantity > 1) {
+                        cartItems[itemId].quantity--;
+                        cartItems[itemId].totalPrice -= cartItems[itemId].price;
+                    } else {
+                        delete cartItems[itemId];
+                    }
+                    updateCartDisplay();
+                }
+            });
 
-        // Add "Takeout" option
-        const takeoutOption = document.createElement('option');
-        takeoutOption.value = '0';
-        takeoutOption.text = 'Takeout';
-        tableDropdown.add(takeoutOption);
+            function updateTableDropdown() {
+                fetch('process_order.php?action=get_unavailable_tables')
+                    .then(response => response.json())
+                    .then(availableTables => {
+                        const tableDropdown = document.getElementById('tableNumber');
+                        tableDropdown.innerHTML = ''; // Clear existing options
 
-        // Add available table numbers
-        for (let i = 1; i <= 20; i++) {
-          if (!availableTables.includes(i)) {
-            const option = document.createElement('option');
-            option.value = i;
-            option.text = i;
-            tableDropdown.add(option);
-          }
-        }
-      })
-      .catch(error => console.error('Error fetching available tables:', error));
-  }
+                        // Add "Takeout" option
+                        const takeoutOption = document.createElement('option');
+                        takeoutOption.value = '0';
+                        takeoutOption.text = 'Takeout';
+                        tableDropdown.add(takeoutOption);
+
+                        // Add available table numbers
+                        for (let i = 1; i <= 20; i++) {
+                            if (!availableTables.includes(i)) {
+                                const option = document.createElement('option');
+                                option.value = i;
+                                option.text = i;
+                                tableDropdown.add(option);
+                            }
+                        }
+                    })
+                    .catch(error => console.error('Error fetching available tables:', error));
+            }
 
         document.getElementById('confirmOrder').addEventListener('click', () => {
             const tableNumber = document.getElementById('tableNumber').value;
             const userId = <?php echo json_encode($user_id); ?>;
 
-            // Check if the cart is empty
-            if (Object.keys(cartItems).length === 0) {
-                // Create an error message element
-                const errorMessage = document.createElement('div');
-                errorMessage.classList.add('alert', 'alert-danger'); // Add Bootstrap alert classes
-                errorMessage.textContent = "Your cart is empty. Please add items before confirming.";
+                // Check if the cart is empty
+                if (Object.keys(cartItems).length === 0) {
+                    // Create an error message element
+                    const errorMessage = document.createElement('div');
+                    errorMessage.classList.add('alert', 'alert-danger'); // Add Bootstrap alert classes
+                    errorMessage.textContent = "Your cart is empty. Please add items before confirming.";
 
-                // Add the error message to the offcanvas body
-                const offcanvasBody = document.querySelector('.offcanvas-body');
-                offcanvasBody.appendChild(errorMessage);
+                    // Add the error message to the offcanvas body
+                    const offcanvasBody = document.querySelector('.offcanvas-body');
+                    offcanvasBody.appendChild(errorMessage);
 
-                // Optional: Remove the message after a few seconds
-                setTimeout(() => {
-                    offcanvasBody.removeChild(errorMessage);
-                }, 5000); // Remove after 5 seconds (adjust as needed)
+                    // Optional: Remove the message after a few seconds
+                    setTimeout(() => {
+                        offcanvasBody.removeChild(errorMessage);
+                    }, 5000); // Remove after 5 seconds (adjust as needed)
 
-                return; // Don't proceed with the order
-            }
+                    return; // Don't proceed with the order
+                }
 
             const orderData = {
                 user_id: userId,
@@ -576,48 +585,48 @@ $role = $_COOKIE['role'];
             // Convert the order data to a JSON string
             const orderDataJson = JSON.stringify(orderData);
 
-            // Send the order data to the server via a POST request
-            fetch('process_order.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: orderDataJson
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json(); // Parse the JSON response from the server
-                })
-                .then(data => {
-                    // Handle the response from the server (e.g., show a success message)
-                    console.log('Order processed successfully:', data);
-                    updateTableDropdown();
+                // Send the order data to the server via a POST request
+                fetch('process_order.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: orderDataJson
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json(); // Parse the JSON response from the server
+                    })
+                    .then(data => {
+                        // Handle the response from the server (e.g., show a success message)
+                        console.log('Order processed successfully:', data);
+                        updateTableDropdown();
 
-                    // Optionally reset the cart and close the offcanvas
-                    cartItems = {};
-                    cartTotal = 0;
-                    updateCartDisplay();
-                    cartOffcanvas.hide();
-                })
-                .catch(error => {
-                    console.error('Error processing order:', error);
-                    // Handle errors (e.g., show an error message to the user)
-                });
+                        // Optionally reset the cart and close the offcanvas
+                        cartItems = {};
+                        cartTotal = 0;
+                        updateCartDisplay();
+                        cartOffcanvas.hide();
+                    })
+                    .catch(error => {
+                        console.error('Error processing order:', error);
+                        // Handle errors (e.g., show an error message to the user)
+                    });
+
+            });
+
+            // Add an event listener to the "Cancel" button
+            cancelButton.addEventListener('click', () => {
+                cartItems = {}; // Reset the cart items
+                cartTotal = 0; // Reset the total
+                updateCartDisplay(); // Update the cart display to clear the items
+                cartOffcanvas.hide(); // Close the offcanvas
+            });
 
         });
-
-        // Add an event listener to the "Cancel" button
-        cancelButton.addEventListener('click', () => {
-            cartItems = {}; // Reset the cart items
-            cartTotal = 0; // Reset the total
-            updateCartDisplay(); // Update the cart display to clear the items
-            cartOffcanvas.hide(); // Close the offcanvas
-        });
-
-    });
-</script>
+    </script>
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
     <!-- Vendor JS Files -->

@@ -224,32 +224,32 @@
                     </ul>
                 </li><!-- End Components Nav -->
 
-                <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-                        <i class="bi bi-card-list"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
-                    </a>
-                    <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                        <li>
-                            <a href="view_category.php">
-                                <i class="bi bi-circle"></i><span>View List Category</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="category.php">
-                                <i class="bi bi-circle"></i><span>Create Category</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li><!-- End Forms Nav -->
-            <?php endif; ?>
-
-            <li class="nav-heading">Pages</li>
             <li class="nav-item">
-                <a class="nav-link" href="report.php">
-                    <i class="bi bi-card-checklist"></i>
-                    <span>Report</span>
+                <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-card-list"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
-            </li>
+                <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="view_category.php">
+                            <i class="bi bi-circle"></i><span>View List Category</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="category.php">
+                            <i class="bi bi-circle"></i><span>Create Category</span>
+                        </a>
+                    </li>
+                </ul>
+            </li><!-- End Forms Nav -->
+            <?php endif; ?> 
+
+                <li class="nav-item">
+                    <a class="nav-link collapse show" href="report.php">
+                        <i class="bi bi-folder"></i>
+                        <span>Sales</span>
+                    </a>
+                </li>
+           
 
             <li class="nav-heading">Users</li>
 

@@ -64,9 +64,9 @@
             if ($row) { // A record was pulled from the database.
 
                 // Set cookies to store user data for 1 hour
-                setcookie('user_id', $row[0], time() + 3600, '/');
-                setcookie('username', $row[1], time() + 3600, '/');
-                setcookie('role', $row[2], time() + 3600, '/');
+                setcookie('user_id', $row[0], time() + 86400, '/');
+                setcookie('username', $row[1], time() + 86400, '/');
+                setcookie('role', $row[2], time() + 86400, '/');
 
                 // Redirect to dashboard
                 header("Location: dashboard.php");
