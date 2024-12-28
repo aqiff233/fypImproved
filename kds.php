@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Orders</title>
+  <title>Kitchen Display System (KDS)</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -90,7 +90,7 @@ $role = $_COOKIE['role'];
             </li>
 
             <li class="nav-item">
-                <a class="nav-link collapse show" href="orders.php">
+                <a class="nav-link collapsed" href="orders.php">
                     <i class="bi bi-card-text"></i>
                     <span>Orders</span>
                 </a>
@@ -104,11 +104,12 @@ $role = $_COOKIE['role'];
             </li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="kds.php">
+                <a class="nav-link" href="kds.php">
                     <i class="bi bi-card-heading"></i>
                     <span>KDS</span>
                 </a>
             </li>
+
             
             <?php if ($role == 'admin' || $role == 'manager'): ?>
             <li class="nav-heading">Catalogs</li>
@@ -167,7 +168,7 @@ $role = $_COOKIE['role'];
   <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Today's Orders</h1>
+      <h1>Kitchen Display System</h1>
     </div><!-- End Page Title -->
 
     <section class="section">
@@ -175,7 +176,7 @@ $role = $_COOKIE['role'];
         <div class="col-lg-12">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Orders</h5>
+              <h5 class="card-title">Kitchen Orders</h5>
               <table class="table table-striped table-bordered" id="ordersTable">
                 <thead> 
                   <tr>
@@ -220,18 +221,18 @@ $role = $_COOKIE['role'];
       const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(now);
       document.getElementById("datetime").textContent = formattedDate;
 
-      // Fetch and display orders
-      fetchOrders();
-      setInterval(fetchOrders, 5000); // Refresh every 5 seconds
+      // Fetch and display orders for KDS
+      fetchOrdersForKDS();
+      setInterval(fetchOrdersForKDS, 5000); // Refresh every 5 seconds
     });
 
-    function fetchOrders() {
-      fetch('process_order.php?action=fetch_orders')
+    function fetchOrdersForKDS() {
+      fetch('process_order.php?action=fetch_orders_for_kds')
         .then(response => response.json())
         .then(orders => {
           displayOrders(orders);
         })
-        .catch(error => console.error('Error fetching orders:', error));
+        .catch(error => console.error('Error fetching orders for KDS:', error));
     }
 
     function displayOrders(orders) {
@@ -283,40 +284,12 @@ $role = $_COOKIE['role'];
         updateStatusDropdownStyle(statusDropdown);
         statusDropdown.addEventListener('change', () => {
           const newStatus = statusDropdown.value;
-          if (newStatus === 'Paid') {
-            //check if payment is completed for the order id
-            //if not completed then dont allow user to change status and alert user that payment has not been made
-            fetch(`check_payment.php?order_id=${order.order_id}`)
-              .then(response => response.json())
-              .then(data => {
-                if (data.payment_status === 'Completed') {
-                  //prompt user to confirm the order
-                  if (confirm(`Are you sure you want to update the status of order ${order.order_id} to ${newStatus}?`)) {
-                    updateOrderStatus(order.order_id, newStatus);
-                  } else {
-                    statusDropdown.value = order.status; // Reset to original status
-                    updateStatusDropdownStyle(statusDropdown);
-                  }
-                } else {
-                  alert('Payment has not been completed for this order.');
-                  statusDropdown.value = order.status; // Reset to original status
-                  updateStatusDropdownStyle(statusDropdown);
-                }
-              })
-              .catch(error => {
-                console.error('Error checking payment status:', error);
-                alert('An error occurred while checking payment status.');
-                statusDropdown.value = order.status; // Reset to original status
-                updateStatusDropdownStyle(statusDropdown);
-              });
+          // For KDS, you might want to limit status updates or handle them differently
+          if (confirm(`Are you sure you want to update the status of order ${order.order_id} to ${newStatus}?`)) {
+            updateOrderStatus(order.order_id, newStatus);
           } else {
-            // For other statuses, directly prompt for confirmation
-            if (confirm(`Are you sure you want to update the status of order ${order.order_id} to ${newStatus}?`)) {
-              updateOrderStatus(order.order_id, newStatus);
-            } else {
-              statusDropdown.value = order.status; // Reset to original status
-              updateStatusDropdownStyle(statusDropdown);
-            }
+            statusDropdown.value = order.status; // Reset to original status
+            updateStatusDropdownStyle(statusDropdown);
           }
         });
 
@@ -338,7 +311,7 @@ $role = $_COOKIE['role'];
         .then(data => {
           if (data.message) {
             console.log(data.message);
-            fetchOrders(); // Refresh the orders list
+            fetchOrdersForKDS(); // Refresh the KDS orders list
           } else if (data.error) {
             console.error(data.error);
             alert(data.error);
@@ -351,33 +324,33 @@ $role = $_COOKIE['role'];
     }
 
     function updateStatusDropdownStyle(selectElement) {
-  selectElement.classList.remove(
-    "bg-warning",
-    "bg-success",
-    "bg-danger",
-    "bg-info",
-    "bg-primary",
-    "bg-opacity-50"
-  );
+      selectElement.classList.remove(
+        "bg-warning",
+        "bg-success",
+        "bg-danger",
+        "bg-info",
+        "bg-primary",
+        "bg-opacity-50"
+      );
 
-  switch (selectElement.value) {
-    case "In Progress":
-      selectElement.classList.add("bg-warning", "bg-opacity-50"); // Yellow
-      break;
-    case "Ready":
-      selectElement.classList.add("bg-primary", "bg-opacity-50"); // Blue
-      break;
-    case "Served":
-      selectElement.classList.add("bg-info", "bg-opacity-50"); // Light Blue/Cyan
-      break;
-    case "Paid":
-      selectElement.classList.add("bg-success", "bg-opacity-50"); // Green
-      break;
-    case "Cancelled":
-      selectElement.classList.add("bg-danger", "bg-opacity-50"); // Red
-      break;
-  }
-}
+      switch (selectElement.value) {
+        case "In Progress":
+          selectElement.classList.add("bg-warning", "bg-opacity-50"); // Yellow
+          break;
+        case "Ready":
+          selectElement.classList.add("bg-primary", "bg-opacity-50"); // Blue
+          break;
+        case "Served":
+          selectElement.classList.add("bg-info", "bg-opacity-50"); // Light Blue/Cyan
+          break;
+        case "Paid":
+          selectElement.classList.add("bg-success", "bg-opacity-50"); // Green
+          break;
+        case "Cancelled":
+          selectElement.classList.add("bg-danger", "bg-opacity-50"); // Red
+          break;
+      }
+    }
   </script>
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 

@@ -545,6 +545,7 @@ $role = $_COOKIE['role'];
 
         document.getElementById('confirmOrder').addEventListener('click', () => {
             const tableNumber = document.getElementById('tableNumber').value;
+            const userId = <?php echo json_encode($user_id); ?>;
 
             // Check if the cart is empty
             if (Object.keys(cartItems).length === 0) {
@@ -566,6 +567,7 @@ $role = $_COOKIE['role'];
             }
 
             const orderData = {
+                user_id: userId,
                 tableNumber: tableNumber,
                 items: cartItems,
                 total: cartTotal

@@ -58,6 +58,23 @@ function generateDailyReport($dbc) {
     $startOfToday = date('Y-m-d 00:00:00');
     $endOfToday = date('Y-m-d 23:59:59');
 
+    /*
+
+    $checkQuery = "SELECT COUNT(*) AS report_count FROM salesreport WHERE report_date BETWEEN ? AND ?";
+    $stmtCheck = $dbc->prepare($checkQuery);
+    $stmtCheck->bind_param("ss", $startOfToday, $endOfToday);
+    $stmtCheck->execute();
+    $result = $stmtCheck->get_result()->fetch_assoc();
+    $reportsToday = $result['report_count'];
+
+    // Set the limit
+    $dailyLimit = 1; // Allow only 1 report per day
+
+    if ($reportsToday >= $dailyLimit) {
+        echo json_encode(['success' => false, 'error' => 'Daily report limit reached.']);
+        exit;
+    }*/
+
     // Fetch total sales and total orders for today
     $salesQuery = "SELECT SUM(total_price) AS total_sales, COUNT(order_id) AS total_orders FROM orders WHERE created_at BETWEEN ? AND ?";
     $stmtSales = $dbc->prepare($salesQuery);
@@ -99,7 +116,7 @@ function generateDailyReport($dbc) {
     $insertReportSql = "INSERT INTO salesreport (report_date, total_sales, total_orders, popular_item_id, total_payment_received, payment_cash, payment_card) VALUES (?, ?, ?, ?, ?, ?, ?)";
     $stmtInsert = $dbc->prepare($insertReportSql);
     $reportDate = date('Y-m-d');
-    $stmtInsert->bind_param("siddddd", $reportDate, $salesResult['total_sales'], $salesResult['total_orders'], $popularItemId, $paymentReceivedResult['total_payment_received'], $paymentCash, $paymentCard);
+    $stmtInsert->bind_param("sdddddd", $reportDate, $salesResult['total_sales'], $salesResult['total_orders'], $popularItemId, $paymentReceivedResult['total_payment_received'], $paymentCash, $paymentCard);
     $stmtInsert->execute();
 
     if ($stmtInsert->affected_rows > 0) {

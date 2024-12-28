@@ -7,7 +7,8 @@ require_once('mysqli.php');
 global $dbc;
 
 // Function to get orders for the current day
-function getOrdersForToday($dbc) {
+function getOrdersForToday($dbc)
+{
     $today = date('Y-m-d');
     $sql = "SELECT o.order_id, o.user_id, o.table_number, o.total_price, o.status, o.created_at,
                    od.product_id, od.quantity, od.price, m.name AS product_name
@@ -49,7 +50,50 @@ function getOrdersForToday($dbc) {
     return $orders;
 }
 
-function getUnavailableTables($dbc) {
+function getOrdersForKDS($dbc) {
+    $sql = "SELECT o.order_id, o.user_id, o.table_number, o.total_price, o.status, o.created_at,
+                   od.product_id, od.quantity, od.price, m.name AS product_name
+            FROM orders o
+            LEFT JOIN orderdetails od ON o.order_id = od.order_id
+            LEFT JOIN menus m ON od.product_id = m.menus_id
+            WHERE o.status NOT IN ('Ready', 'Served', 'Paid')
+            ORDER BY o.order_id, od.order_details_id";
+
+    $stmt = $dbc->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $orders = [];
+    while ($row = $result->fetch_assoc()) {
+        $orderId = $row['order_id'];
+        if (!isset($orders[$orderId])) {
+            $orders[$orderId] = [
+                'order_id' => $orderId,
+                'user_id' => $row['user_id'],
+                'table_number' => $row['table_number'],
+                'total_price' => $row['total_price'],
+                'status' => $row['status'],
+                'created_at' => $row['created_at'],
+                'items' => []
+            ];
+        }
+        // Add item details if available
+        if ($row['product_id']) {
+            $orders[$orderId]['items'][] = [
+                'product_name' => $row['product_name'],
+                'quantity' => $row['quantity'],
+                'price' => $row['price']
+            ];
+        }
+    }
+
+    return $orders;
+}
+
+
+
+function getUnavailableTables($dbc)
+{
     $sql = "SELECT DISTINCT table_number FROM orders WHERE status IN ('In Progress', 'Ready', 'Served')";
     $result = $dbc->query($sql);
 
@@ -63,11 +107,13 @@ function getUnavailableTables($dbc) {
 }
 
 // Function to get tickets (orders with status 'Ready' or 'Served')
-function getTickets($dbc) {
+// Add following to filter : WHERE o.status IN ('Ready', 'Served')
+function getTickets($dbc)
+{
     $sql = "SELECT o.order_id, o.table_number, o.total_price, o.status, u.username
             FROM orders o
             LEFT JOIN users u ON o.user_id = u.user_id
-            WHERE o.status IN ('Ready', 'Served')
+            WHERE o.status != 'Paid'
             ORDER BY o.created_at DESC";
 
     $stmt = $dbc->prepare($sql);
@@ -89,7 +135,8 @@ function getTickets($dbc) {
 }
 
 // Function to get a specific order's details
-function getOrderDetails($dbc, $orderId) {
+function getOrderDetails($dbc, $orderId)
+{
     $sql = "SELECT o.order_id, o.table_number, o.total_price, o.status, o.user_id,
                    od.product_id, od.quantity, od.price, m.name AS product_name
             FROM orders o
@@ -119,7 +166,6 @@ function getOrderDetails($dbc, $orderId) {
             $order['total_price'] = $row['total_price'];
             $order['status'] = $row['status'];
             $order['user_id'] = $row['user_id'];
-
         }
         $order['items'][] = [
             'product_name' => $row['product_name'],
@@ -131,7 +177,8 @@ function getOrderDetails($dbc, $orderId) {
     return $order;
 }
 
-function getUsername($dbc, $userId) {
+function getUsername($dbc, $userId)
+{
     $sql = "SELECT username FROM users WHERE user_id = ?";
     $stmt = $dbc->prepare($sql);
     $stmt->bind_param("i", $userId);
@@ -143,7 +190,8 @@ function getUsername($dbc, $userId) {
     return null;
 }
 
-function getAllReceipts($dbc) {
+function getAllReceipts($dbc)
+{
     $sql = "SELECT receipt_id, order_id, payment_id, total_amount, payment_method, issued_at FROM receipts ORDER BY issued_at DESC";
     $stmt = $dbc->prepare($sql);
     $stmt->execute();
@@ -167,13 +215,20 @@ if (isset($_GET['action'])) {
         header('Content-Type: application/json');
         echo json_encode($orders);
         exit;
+    }  else if ($action == 'fetch_orders_for_kds') {
+        // Fetch orders for KDS using the new function
+        $orders = getOrdersForKDS($dbc);
+        header('Content-Type: application/json');
+        echo json_encode($orders);
+        exit;
+
     } elseif ($action === 'update_status') {
         // Update order status
         $orderId = $_POST['order_id'];
         $newStatus = $_POST['new_status'];
 
         // Validate the status
-        if (!in_array($newStatus, ['In Progress', 'Paid', 'Cancelled', 'Ready','Served'])) {
+        if (!in_array($newStatus, ['In Progress', 'Paid', 'Cancelled', 'Ready', 'Served'])) {
             http_response_code(400); // Bad Request
             echo json_encode(['error' => 'Invalid status']);
             exit;
@@ -191,8 +246,7 @@ if (isset($_GET['action'])) {
             echo json_encode(['error' => 'Failed to update order status']);
         }
         exit;
-    }
-    elseif ($action === 'get_unavailable_tables') {
+    } elseif ($action === 'get_unavailable_tables') {
         // Get unavailable tables
         $unavailableTables = getUnavailableTables($dbc);
 
@@ -200,8 +254,7 @@ if (isset($_GET['action'])) {
         header('Content-Type: application/json');
         echo json_encode($unavailableTables);
         exit;
-    }
-    elseif ($action === 'fetch_tickets') {
+    } elseif ($action === 'fetch_tickets') {
         // Fetch tickets
         $tickets = getTickets($dbc);
 
@@ -209,16 +262,14 @@ if (isset($_GET['action'])) {
         header('Content-Type: application/json');
         echo json_encode($tickets);
         exit;
-    }
-    elseif ($action === 'fetch_order_details') {
+    } elseif ($action === 'fetch_order_details') {
         $orderId = $_GET['order_id'];
         $orderDetails = getOrderDetails($dbc, $orderId);
 
         header('Content-Type: application/json');
         echo json_encode($orderDetails);
         exit;
-    }
-    elseif ($action === 'update_payment') {
+    } elseif ($action === 'update_payment') {
         $orderId = $_POST['order_id'];
         $paymentAmount = $_POST['payment_amount'];
         $paymentMethod = $_POST['payment_method'];
@@ -229,22 +280,20 @@ if (isset($_GET['action'])) {
             $stmtPayment = $dbc->prepare($insertPaymentSql);
             $stmtPayment->bind_param("isds", $orderId, $paymentMethod, $paymentAmount, $paymentStatus); //i=int,s=string,d=double
             $stmtPayment->execute();
-    
+
             if ($stmtPayment->affected_rows > 0) {
                 echo json_encode(['success' => true]);
             } else {
                 // No rows affected, but there might still be an error
-                throw new Exception("Failed to update payment: No rows affected. Error: " . $stmtPayment->error); 
+                throw new Exception("Failed to update payment: No rows affected. Error: " . $stmtPayment->error);
             }
-    
         } catch (Exception $e) {
             // Log the error to a file or error logging system
-            error_log("Error updating payment: " . $e->getMessage()); 
-    
+            error_log("Error updating payment: " . $e->getMessage());
+
             echo json_encode(['success' => false, 'error' => 'Failed to update payment: ' . $e->getMessage()]);
         }
         exit;
-
     } elseif ($action === 'generate_receipt') {
         $orderId = $_POST['order_id'];
         $paymentMethod = $_POST['payment_method'];
@@ -263,8 +312,7 @@ if (isset($_GET['action'])) {
             echo json_encode(['success' => false, 'error' => 'Failed to generate receipt']);
         }
         exit;
-
-    }  elseif ($action === 'fetch_receipt_details') {
+    } elseif ($action === 'fetch_receipt_details') {
         $orderId = $_GET['order_id'];
         $orderDetails = getOrderDetails($dbc, $orderId);
         $username = getUsername($dbc, $orderDetails['user_id']); // Fetch username
@@ -287,13 +335,12 @@ if (isset($_GET['action'])) {
         header('Content-Type: application/json');
         echo json_encode($receiptDetails);
         exit;
-    }
-    elseif ($action === 'fetch_all_receipts') {
+    } elseif ($action === 'fetch_all_receipts') {
         $receipts = getAllReceipts($dbc); // Implement this function
         header('Content-Type: application/json');
         echo json_encode($receipts);
         exit;
-    }
+    } 
 }
 
 // Handle order placement (existing code)
@@ -302,6 +349,7 @@ $orderData = json_decode($json, true);
 
 if ($orderData) {
     // Extract order details
+    $userId = $orderData['user_id'];
     $tableNumber = $orderData['tableNumber'];
     $items = $orderData['items'];
     $totalPrice = $orderData['total'];
@@ -311,9 +359,9 @@ if ($orderData) {
 
     try {
         // Insert into orders table
-        $insertOrderSql = "INSERT INTO orders (user_id, table_number, total_price, status) VALUES (NULL, ?, ?, 'In Progress')";
+        $insertOrderSql = "INSERT INTO orders (user_id, table_number, total_price, status) VALUES (?, ?, ?, 'In Progress')";
         $stmtOrder = $dbc->prepare($insertOrderSql);
-        $stmtOrder->bind_param("id", $tableNumber, $totalPrice);
+        $stmtOrder->bind_param("iid", $userId, $tableNumber, $totalPrice);
         $stmtOrder->execute();
         $orderId = $dbc->insert_id;
 
@@ -351,4 +399,3 @@ if ($orderData) {
     http_response_code(400); // Bad Request
     echo json_encode(['error' => 'Invalid request']);
 }
-?>
