@@ -85,18 +85,24 @@
             max-width: 800px;
             /* Maximum width */
         }
-        .report-header{
+
+        .report-header {
             display: flex;
         }
-        .receipt-body{
+
+        .receipt-body {
             color: black;
         }
-        .receipt-header img{
+
+        .receipt-header img {
             width: 15%;
         }
-        .receipt-header,.receipt-footer{
+
+        .receipt-header,
+        .receipt-footer {
             text-align: center;
         }
+
         .report-content {
             padding: 20px;
         }
@@ -118,6 +124,7 @@
             right: 20px;
             z-index: 10;
         }
+
         #overlay {
             position: fixed;
             top: 0;
@@ -128,7 +135,6 @@
             z-index: 1040;
             display: none;
         }
-
     </style>
 </head>
 
@@ -198,44 +204,44 @@
                 </a>
             </li>
             <?php if ($role == 'admin' || $role == 'manager'): ?>
-            <li class="nav-heading">Catalogs</li>
+                <li class="nav-heading">Catalogs</li>
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-box-seam"></i><span>Menus</span><i class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="view_menu.php">
-                            <i class="bi bi-circle"></i><span>View List Menu</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="menu.php">
-                            <i class="bi bi-circle"></i><span>Create Menu</span>
-                        </a>
-                    </li>
-                </ul>
-            </li><!-- End Components Nav -->
+                <li class="nav-item">
+                    <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+                        <i class="bi bi-box-seam"></i><span>Menus</span><i class="bi bi-chevron-down ms-auto"></i>
+                    </a>
+                    <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                        <li>
+                            <a href="view_menu.php">
+                                <i class="bi bi-circle"></i><span>View List Menu</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="menu.php">
+                                <i class="bi bi-circle"></i><span>Create Menu</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li><!-- End Components Nav -->
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-card-list"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="view_category.php">
-                            <i class="bi bi-circle"></i><span>View List Category</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="category.php">
-                            <i class="bi bi-circle"></i><span>Create Category</span>
-                        </a>
-                    </li>
-                </ul>
-            </li><!-- End Forms Nav -->
-            <?php endif; ?> 
+                <li class="nav-item">
+                    <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+                        <i class="bi bi-card-list"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
+                    </a>
+                    <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                        <li>
+                            <a href="view_category.php">
+                                <i class="bi bi-circle"></i><span>View List Category</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="category.php">
+                                <i class="bi bi-circle"></i><span>Create Category</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li><!-- End Forms Nav -->
+            <?php endif; ?>
 
             <li class="nav-heading">Pages</li>
             <li class="nav-item">
@@ -300,7 +306,7 @@
             <div class="report-content">
                 <button class="back-button" onclick="hideReport()"><i class="bi bi-arrow-left"></i></button>
                 <div id="reportData" class="receipt-body">
-                <!-- Report data will be loaded here -->
+                    <!-- Report data will be loaded here -->
                 </div>
                 <button class="btn btn-primary download-button" onclick="downloadReport()">Download Report</button>
             </div>
@@ -321,7 +327,12 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const now = new Date();
-            const options = { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' };
+            const options = {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            };
             const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(now);
             document.getElementById("datetime").textContent = formattedDate;
 
@@ -367,21 +378,31 @@
                     // Construct the report content
                     const reportContent = `
                         <div class="receipt-header">
-                            <img src="assets/img/logo.jpeg" alt="Company Logo">
-                            <h5>Kedai Makan Teluk Bharu</h5>
-                            <p>Kampung Teluk Bharu,06700,<br>Pendang,Kedah</p>
-                            <p>Report ID: ${reportData.report_id}</p>
-                            <p>Date: ${reportData.report_date}</p>
-                            <p>Generated on: ${new Date().toLocaleString()}</p>
-                        </div>
-                        <div class="receipt-details">
-                            <p>Total Sales: RM${reportData.total_sales}</p>
-                            <p>Total Orders: ${reportData.total_orders}</p>
-                            <p>Popular Item: ${reportData.popular_item_name || 'N/A'}</p>
-                            <p>Total Payment Received: RM${reportData.total_payment_received}</p>
-                            <p>Payment (Cash): RM${reportData.payment_cash || '0.00'}</p>
-                            <p>Payment (Card): RM${reportData.payment_card || '0.00'}</p>
-                        </div>
+    <img src="assets/img/logo2-removebg.png" alt="Company Logo" style="width:100px; height:auto;">
+    <h5>RESTORAN SUDUT SELERA SIDDIQIE </h5>
+    <p>38, Jalan Pesona 2, taman pesona, 86000,<br>Kluang, Johor</p>
+    <p>Report ID: ${reportData.report_id}</p>
+    <p>Date: ${reportData.report_date}</p>
+    <p>Generated on: ${new Date().toLocaleString()}</p>
+</div>
+
+<br> <br> <!-- Increased space between header and body -->
+<hr> <!-- Divider -->
+
+<div class="receipt-details">
+    <p>Total Orders: ${reportData.total_orders}</p>
+    <p>Popular Item: ${reportData.popular_item_name || 'N/A'}</p>
+    
+    <hr> <!-- Divider between Popular Item and Total Sales -->
+    
+    <p>Total Sales: RM${reportData.total_sales}</p>
+    <p>Payment (Cash): RM${reportData.payment_cash || '0.00'}</p>
+    <p>Payment (Card): RM${reportData.payment_card || '0.00'}</p>
+    
+    <hr> <!-- Final divider for Total Payment Received -->
+    
+    <p>Total Payment Received: RM${reportData.total_payment_received}</p>
+</div>
                     `;
                     reportContainer.innerHTML = reportContent;
 
@@ -402,28 +423,31 @@
 
         function generateReport() {
             fetch('process_report.php?action=generate_report', {
-                method: 'POST'
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Report generated successfully!');
-                    fetchReports(); // Refresh the reports list
-                } else {
-                    alert('Failed to generate report: ' + data.error);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to generate report.');
-            });
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Report generated successfully!');
+                        fetchReports(); // Refresh the reports list
+                    } else {
+                        alert('Failed to generate report: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to generate report.');
+                });
         }
+
         function downloadReport() {
             // Get the HTML content of the report
             const reportContent = document.getElementById('reportData').innerHTML;
 
             // Create a Blob from the HTML content
-            const blob = new Blob([reportContent], { type: 'text/html' });
+            const blob = new Blob([reportContent], {
+                type: 'text/html'
+            });
 
             // Create a link element
             const link = document.createElement('a');
@@ -437,7 +461,6 @@
             link.click();
             document.body.removeChild(link);
         }
-
     </script>
 
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i

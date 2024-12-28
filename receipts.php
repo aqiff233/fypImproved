@@ -367,9 +367,9 @@ $role = $_COOKIE['role'];
                     // Construct the receipt content
                     const receiptContent = `
                         <div class="receipt-header">
-                            <img src="assets/img/logo.jpeg" alt="Company Logo">
-                            <h5>Kedai Makan Teluk Bharu</h5>
-                            <p>Kampung Teluk Bharu,06700,<br>Pendang,Kedah</p>
+                            <img src="assets/img/logo2-removebg.png" alt="Company Logo" style="width:100px; height:auto;">
+                        <h5>RESTORAN SUDUT SELERA SIDDIQIE </h5>
+                        <p>38, Jalan Pesona 2, taman pesona, 86000,<br>Kluang, Johor</p>
                         </div>
                         <div class="receipt-details">
                             <p>Order ID: ${receiptData.order_id}</p>

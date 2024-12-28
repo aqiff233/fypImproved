@@ -245,7 +245,7 @@ $role = $_COOKIE['role'];
 
         // Table Number
         const cellTableNumber = row.insertCell();
-        cellTableNumber.textContent = order.table_number;
+        cellTableNumber.textContent = order.table_number === 0 ? 'Takeout' : order.table_number;
 
         // Items
         const cellItems = row.insertCell();
