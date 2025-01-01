@@ -328,7 +328,7 @@ if ($menuItemsResult->num_rows > 0) {
             </div>
 
             <!-- Cancel and Confirm Buttons -->
-            <div class="d-flex justify-content-between mt-3">
+            <div class="d-flex justify-content-between mt-3" style="margin-bottom: 20px;">
                 <button class="btn btn-secondary" data-bs-dismiss="offcanvas">Cancel</button>
                 <button class="btn btn-primary" id="confirmOrder">Confirm Order</button>
             </div>
@@ -562,6 +562,8 @@ if ($menuItemsResult->num_rows > 0) {
                     const errorMessage = document.createElement('div');
                     errorMessage.classList.add('alert', 'alert-danger'); // Add Bootstrap alert classes
                     errorMessage.textContent = "Your cart is empty. Please add items before confirming.";
+
+                    errorMessage.style.paddingTop = "10px"; 
 
                     // Add the error message to the offcanvas body
                     const offcanvasBody = document.querySelector('.offcanvas-body');

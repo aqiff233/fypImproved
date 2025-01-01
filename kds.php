@@ -198,6 +198,44 @@ $role = $_COOKIE['role'];
       </div>
     </section>
 
+    <!-- Confirmation Modal -->
+  <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmationModalLabel">Confirm Order Update</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to update the order status?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="confirmUpdateBtn">Update</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Modal -->
+  <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="errorModalLabel">Error</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          An error occurred.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
   </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->
@@ -276,21 +314,26 @@ $role = $_COOKIE['role'];
         statusDropdown.innerHTML = `
             <option value="In Progress" ${order.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
             <option value="Paid" ${order.status === 'Paid' ? 'selected' : ''}>Paid</option>
-            <option value="Cancelled" ${order.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
             <option value="Ready" ${order.status === 'Ready' ? 'selected' : ''}>Ready</option>
             <option value="Served" ${order.status === 'Served' ? 'selected' : ''}>Served</option>
 
           `;
         updateStatusDropdownStyle(statusDropdown);
         statusDropdown.addEventListener('change', () => {
-          const newStatus = statusDropdown.value;
-          // For KDS, you might want to limit status updates or handle them differently
-          if (confirm(`Are you sure you want to update the status of order ${order.order_id} to ${newStatus}?`)) {
-            updateOrderStatus(order.order_id, newStatus);
-          } else {
-            statusDropdown.value = order.status; // Reset to original status
-            updateStatusDropdownStyle(statusDropdown);
-          }
+           const newStatus = statusDropdown.value;
+          // For other statuses, show confirmation modal
+          const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+            document.getElementById('confirmationModalLabel').textContent = 'Confirm Order Update';
+            document.querySelector('#confirmationModal .modal-body').textContent = `Are you sure you want to update the status of order ${order.order_id} to ${newStatus}?`;
+
+            // Handle confirmation
+            document.getElementById('confirmUpdateBtn').onclick = () => {
+              updateOrderStatus(order.order_id, newStatus); // Use order.order_id directly
+              confirmationModal.hide();
+            };
+
+            confirmationModal.show();
+          
         });
 
         cellStatus.appendChild(statusDropdown);

@@ -24,11 +24,31 @@ if (isset($_GET['action'])) {
         generateDailyReport($dbc); // Call the function to generate the report
         exit;
     }
+    else if ($action === 'fetch_reports_by_date') {
+        $date = $_GET['date'];
+        $reports = fetchReportsByDate($dbc, $date);
+        echo json_encode($reports);
+        exit;
+    }
 }
 
 function getAllReports($dbc) {
     $sql = "SELECT rs.*, m.name AS popular_item_name FROM salesreport rs LEFT JOIN menus m ON rs.popular_item_id = m.menus_id ORDER BY report_date DESC";
     $stmt = $dbc->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $reports = [];
+    while ($row = $result->fetch_assoc()) {
+        $reports[] = $row;
+    }
+    return $reports;
+}
+
+function fetchReportsByDate($dbc, $date) {
+    // Modify this query according to your database schema
+    $sql = "SELECT rs.*, m.name AS popular_item_name FROM salesreport rs LEFT JOIN menus m ON rs.popular_item_id = m.menus_id WHERE DATE(report_date) = ? ORDER BY report_date DESC";
+    $stmt = $dbc->prepare($sql);
+    $stmt->bind_param("s", $date);
     $stmt->execute();
     $result = $stmt->get_result();
     $reports = [];

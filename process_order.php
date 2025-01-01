@@ -50,20 +50,24 @@ function getOrdersForToday($dbc)
     return $orders;
 }
 
-function getOrdersForKDS($dbc) {
+function getOrdersForKDS($dbc)
+{
+    $today = date('Y-m-d');
     $sql = "SELECT o.order_id, o.user_id, o.table_number, o.total_price, o.status, o.created_at,
                    od.product_id, od.quantity, od.price, m.name AS product_name
             FROM orders o
             LEFT JOIN orderdetails od ON o.order_id = od.order_id
             LEFT JOIN menus m ON od.product_id = m.menus_id
-            WHERE o.status NOT IN ('Ready', 'Served', 'Paid')
+            WHERE o.status NOT IN ('Ready', 'Served', 'Cancelled')
+            AND DATE(o.created_at) = ?
             ORDER BY o.order_id, od.order_details_id";
 
     $stmt = $dbc->prepare($sql);
+    $stmt->bind_param("s", $today);
     $stmt->execute();
     $result = $stmt->get_result();
-
     $orders = [];
+    
     while ($row = $result->fetch_assoc()) {
         $orderId = $row['order_id'];
         if (!isset($orders[$orderId])) {
@@ -215,13 +219,12 @@ if (isset($_GET['action'])) {
         header('Content-Type: application/json');
         echo json_encode($orders);
         exit;
-    }  else if ($action == 'fetch_orders_for_kds') {
+    } else if ($action == 'fetch_orders_for_kds') {
         // Fetch orders for KDS using the new function
         $orders = getOrdersForKDS($dbc);
         header('Content-Type: application/json');
         echo json_encode($orders);
         exit;
-
     } elseif ($action === 'update_status') {
         // Update order status
         $orderId = $_POST['order_id'];
@@ -340,7 +343,7 @@ if (isset($_GET['action'])) {
         header('Content-Type: application/json');
         echo json_encode($receipts);
         exit;
-    } 
+    }
 }
 
 // Handle order placement (existing code)

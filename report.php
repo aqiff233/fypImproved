@@ -276,6 +276,7 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h5 class="card-title">Report List</h5>
+                                <input type="date" id="reportSearchDate" class="form-control" style="width: auto;">
                                 <button class="btn btn-primary" id="generateReportBtn">Generate Report</button>
                             </div>
                             <table class="table modern-table" id="reportsTable">
@@ -339,6 +340,16 @@
             fetchReports();
 
             document.getElementById('generateReportBtn').addEventListener('click', generateReport);
+
+            // Add an event listener for the search input
+            document.getElementById('reportSearchDate').addEventListener('change', function () {
+                const selectedDate = this.value;
+                if (selectedDate) {
+                    searchReportsByDate(selectedDate);
+                } else {
+                    fetchReports(); // Fetch all reports if the date is cleared
+                }
+            });
         });
 
         function fetchReports() {
@@ -460,6 +471,18 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+        }
+
+        function searchReportsByDate(date) {
+            fetch(`process_report.php?action=fetch_reports_by_date&date=${date}`)
+                .then(response => response.json())
+                .then(reports => {
+                    displayReports(reports);
+                })
+                .catch(error => {
+                    console.error('Error fetching reports by date:', error);
+                    alert('Failed to fetch reports.');
+                });
         }
     </script>
 
