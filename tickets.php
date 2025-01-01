@@ -236,7 +236,7 @@
         <a href="payment.php?order_id=${ticket.order_id}" class="card-link">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Table: ${ticket.table_number}</h5>
+              <h5 class="card-title">${ticket.table_number === 0 ? 'Takeout' : 'Table: ' + ticket.table_number}</h5>
               <p class="card-text">Order ID: ${ticket.order_id}</p>
               <p class="card-text">Status: ${ticket.status}</p>
               <p class="card-text">Total: RM${ticket.total_price}</p>

@@ -328,7 +328,7 @@ if ($menuItemsResult->num_rows > 0) {
             </div>
 
             <!-- Cancel and Confirm Buttons -->
-            <div class="d-flex justify-content-between mt-3">
+            <div class="d-flex justify-content-between mt-3" style="margin-bottom: 20px;">
                 <button class="btn btn-secondary" data-bs-dismiss="offcanvas">Cancel</button>
                 <button class="btn btn-primary" id="confirmOrder">Confirm Order</button>
             </div>
@@ -552,8 +552,9 @@ if ($menuItemsResult->num_rows > 0) {
                     .catch(error => console.error('Error fetching available tables:', error));
             }
 
-            document.getElementById('confirmOrder').addEventListener('click', () => {
-                const tableNumber = document.getElementById('tableNumber').value;
+        document.getElementById('confirmOrder').addEventListener('click', () => {
+            const tableNumber = document.getElementById('tableNumber').value;
+            const userId = <?php echo json_encode($user_id); ?>;
 
                 // Check if the cart is empty
                 if (Object.keys(cartItems).length === 0) {
@@ -561,6 +562,8 @@ if ($menuItemsResult->num_rows > 0) {
                     const errorMessage = document.createElement('div');
                     errorMessage.classList.add('alert', 'alert-danger'); // Add Bootstrap alert classes
                     errorMessage.textContent = "Your cart is empty. Please add items before confirming.";
+
+                    errorMessage.style.paddingTop = "10px"; 
 
                     // Add the error message to the offcanvas body
                     const offcanvasBody = document.querySelector('.offcanvas-body');
@@ -574,14 +577,15 @@ if ($menuItemsResult->num_rows > 0) {
                     return; // Don't proceed with the order
                 }
 
-                const orderData = {
-                    tableNumber: tableNumber,
-                    items: cartItems,
-                    total: cartTotal
-                };
-                console.log('Order Data:', orderData);
-                // Convert the order data to a JSON string
-                const orderDataJson = JSON.stringify(orderData);
+            const orderData = {
+                user_id: userId,
+                tableNumber: tableNumber,
+                items: cartItems,
+                total: cartTotal
+            };
+            console.log('Order Data:', orderData);
+            // Convert the order data to a JSON string
+            const orderDataJson = JSON.stringify(orderData);
 
                 // Send the order data to the server via a POST request
                 fetch('process_order.php', {

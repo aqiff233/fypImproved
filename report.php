@@ -224,25 +224,24 @@
                     </ul>
                 </li><!-- End Components Nav -->
 
-                <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-                        <i class="bi bi-card-list"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
-                    </a>
-                    <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                        <li>
-                            <a href="view_category.php">
-                                <i class="bi bi-circle"></i><span>View List Category</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="category.php">
-                                <i class="bi bi-circle"></i><span>Create Category</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li><!-- End Forms Nav -->
-
-                <li class="nav-heading">Report</li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-card-list"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="view_category.php">
+                            <i class="bi bi-circle"></i><span>View List Category</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="category.php">
+                            <i class="bi bi-circle"></i><span>Create Category</span>
+                        </a>
+                    </li>
+                </ul>
+            </li><!-- End Forms Nav -->
+            <?php endif; ?> 
 
                 <li class="nav-item">
                     <a class="nav-link collapse show" href="report.php">
@@ -250,7 +249,7 @@
                         <span>Sales</span>
                     </a>
                 </li>
-            <?php endif; ?>
+           
 
             <li class="nav-heading">Users</li>
 
@@ -277,6 +276,7 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h5 class="card-title">Report List</h5>
+                                <input type="date" id="reportSearchDate" class="form-control" style="width: auto;">
                                 <button class="btn btn-primary" id="generateReportBtn">Generate Report</button>
                             </div>
                             <table class="table modern-table" id="reportsTable">
@@ -340,6 +340,16 @@
             fetchReports();
 
             document.getElementById('generateReportBtn').addEventListener('click', generateReport);
+
+            // Add an event listener for the search input
+            document.getElementById('reportSearchDate').addEventListener('change', function () {
+                const selectedDate = this.value;
+                if (selectedDate) {
+                    searchReportsByDate(selectedDate);
+                } else {
+                    fetchReports(); // Fetch all reports if the date is cleared
+                }
+            });
         });
 
         function fetchReports() {
@@ -379,21 +389,31 @@
                     // Construct the report content
                     const reportContent = `
                         <div class="receipt-header">
-                            <img src="assets/img/logo.jpeg" alt="Company Logo">
-                            <h5>Kedai Makan Teluk Bharu</h5>
-                            <p>Kampung Teluk Bharu,06700,<br>Pendang,Kedah</p>
-                            <p>Report ID: ${reportData.report_id}</p>
-                            <p>Date: ${reportData.report_date}</p>
-                            <p>Generated on: ${new Date().toLocaleString()}</p>
-                        </div>
-                        <div class="receipt-details">
-                            <p>Total Sales: RM${reportData.total_sales}</p>
-                            <p>Total Orders: ${reportData.total_orders}</p>
-                            <p>Popular Item: ${reportData.popular_item_name || 'N/A'}</p>
-                            <p>Total Payment Received: RM${reportData.total_payment_received}</p>
-                            <p>Payment (Cash): RM${reportData.payment_cash || '0.00'}</p>
-                            <p>Payment (Card): RM${reportData.payment_card || '0.00'}</p>
-                        </div>
+    <img src="assets/img/logo2-removebg.png" alt="Company Logo" style="width:100px; height:auto;">
+    <h5>RESTORAN SUDUT SELERA SIDDIQIE </h5>
+    <p>38, Jalan Pesona 2, taman pesona, 86000,<br>Kluang, Johor</p>
+    <p>Report ID: ${reportData.report_id}</p>
+    <p>Date: ${reportData.report_date}</p>
+    <p>Generated on: ${new Date().toLocaleString()}</p>
+</div>
+
+<br> <br> <!-- Increased space between header and body -->
+<hr> <!-- Divider -->
+
+<div class="receipt-details">
+    <p>Total Orders: ${reportData.total_orders}</p>
+    <p>Popular Item: ${reportData.popular_item_name || 'N/A'}</p>
+    
+    <hr> <!-- Divider between Popular Item and Total Sales -->
+    
+    <p>Total Sales: RM${reportData.total_sales}</p>
+    <p>Payment (Cash): RM${reportData.payment_cash || '0.00'}</p>
+    <p>Payment (Card): RM${reportData.payment_card || '0.00'}</p>
+    
+    <hr> <!-- Final divider for Total Payment Received -->
+    
+    <p>Total Payment Received: RM${reportData.total_payment_received}</p>
+</div>
                     `;
                     reportContainer.innerHTML = reportContent;
 
@@ -451,6 +471,18 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+        }
+
+        function searchReportsByDate(date) {
+            fetch(`process_report.php?action=fetch_reports_by_date&date=${date}`)
+                .then(response => response.json())
+                .then(reports => {
+                    displayReports(reports);
+                })
+                .catch(error => {
+                    console.error('Error fetching reports by date:', error);
+                    alert('Failed to fetch reports.');
+                });
         }
     </script>
 
