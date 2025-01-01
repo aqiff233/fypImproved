@@ -26,6 +26,9 @@
     <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
     <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
     <!-- Template Main CSS File -->
     <link href="assets/css/style.css" rel="stylesheet">
 
@@ -40,16 +43,16 @@
 
 <body>
     <?php
-    // Check if the user is logged in via cookies
-    if (!isset($_COOKIE['user_id'])) {
-        // If not logged in, redirect to login page
-        header("Location: login.php");
-        exit();
-    }
+        // Check if the user is logged in via cookies
+        if (!isset($_COOKIE['user_id'])) {
+            // If not logged in, redirect to login page
+            header("Location: login.php");
+            exit();
+        }
 
-    $user_id = $_COOKIE['user_id'];
-    $username = $_COOKIE['username'];
-    $role = $_COOKIE['role'];
+        $user_id = $_COOKIE['user_id'];
+        $username = $_COOKIE['username'];
+        $role = $_COOKIE['role'];
     ?>
 
     <!-- ======= Header ======= -->
@@ -178,62 +181,293 @@
             <h1>Items</h1>
         </div><!-- End Page Title -->
         <div class="col-xl-12">
-            <form action="view_menu.php" method="post">
-                <div class="row gy-4">
-                    <div class="card p-4">
-                        <div class="col-md-3 mb-3 d-flex align-items-center gap-2">
+            <div class="row gy-4">
+                <div class="card p-4">
+                    <!-- Filter Form -->
+                    <form action="view_menu.php" method="post">
+                        <div class="col-md-12 d-flex align-items-center gap-2 mb-3">
+                            <div class="col-md-3">
+                                <?php
+                                require_once('mysqli.php'); // Connect to the db.
+                                global $dbc;
 
-                            <?php
-                            require_once('mysqli.php'); // Connect to the db.
-                            global $dbc;
+                                $query2 = "select category_id, name from categories";
+                                $result2 = @mysqli_query($dbc, $query2); // Run the query.
+                                $num2 = @mysqli_num_rows($result2);
 
-                            $query2 = "select category_id, name from categories";
-                            $result2 = @mysqli_query($dbc, $query2); // Run the query.
-                            $num2 = @mysqli_num_rows($result2);
+                                if ($num2 > 0) {
+                                    echo '<select class="form-select" name="category_id" aria-label="Default select example" id="fieldA" required>
+                                <option value="" selected disabled>Category</option>';
 
-                            //$all = '';
-                            //$all = 1;
-
-                            if ($num2 > 0) {
-                                echo '<select class="form-select" name="category_id" aria-label="Default select example" id="fieldA" required>
-                                        <option value="" selected disabled>Category</option>';
-
-                                while ($row2 = @mysqli_fetch_array($result2, MYSQLI_ASSOC)) {
-                                    echo '<option value=' . $row2['category_id'] . '>' . $row2['name'] . '</option>';
+                                    while ($row2 = @mysqli_fetch_array($result2, MYSQLI_ASSOC)) {
+                                        echo '<option value=' . $row2['category_id'] . '>' . $row2['name'] . '</option>';
+                                    }
+                                    echo '<option value="all">All Categories</option>';
+                                    echo '</select>';
+                                } else {
+                                    echo '<p>No categories available.</p>';
                                 }
-                                echo '<option value="all">All Categories</option>';
-                                echo '</select>';
-                            } else {
-                                echo '<p>No categories available.</p>';
-                            }
 
-                            ?>
-                            <button type="submit" class="btn btn-primary" id="buttonA">Filter</button>
-                            <input type="hidden" name="submitted" value="TRUE" />
+                                ?>
+                            </div>
+                            <div class="col-md-3">
+                                <button type="submit" class="btn btn-primary" id="buttonA">Filter</button>
+                                <input type="hidden" name="submitted" value="TRUE" />
+                            </div>
                         </div>
-            </form>
+                    </form>
+
+                    <!-- Search Form -->
+                    <form action="view_menu.php" method="post">
+                        <div class="col-md-12 d-flex align-items-center gap-2">
+                            <div class="col-md-9 d-flex align-items-center gap-2">
+                                <div class="flex-grow-1">
+                                    <input type="text" class="form-control" name="search" placeholder="Search..." required>
+                                </div>
+                                <button type="submit" class="btn btn-primary" id="buttonB">Search</button>
+                                <input type="hidden" name="searched" value="TRUE" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
             <?php
-            require_once('mysqli.php'); // Connect to the db.
-            global $dbc;
+                require_once('mysqli.php'); // Connect to the db.
+                global $dbc;
 
-            $counter = 1;
+                $counter = 1;
 
-            $yes = 1;
-            $no = 0;
+                $yes = 1;
+                $no = 0;
 
-            if (isset($_POST['submitted'])) {
+                if (isset($_POST['submitted'])) {
 
-                $cat = $_POST['category_id'];
-                $selected = $cat;
+                    $cat = $_POST['category_id'];
+                    $selected = $cat;
 
-                if ($selected == 'all') {
-                    $query = "SELECT
+                    if ($selected == 'all') {
+                        $query = "SELECT
+                                    menus.menus_id,
+                                    menus.name,
+                                    menus.price,
+                                    categories.name AS category_name,  
+                                    CASE 
+                                        WHEN menus.availability = 1 THEN 'Yes'
+                                        ELSE 'No'
+                                    END AS availability,
+                                    menus.created_at,
+                                    menus.updated_at
+                                    FROM menus
+                                    JOIN
+                                    categories
+                                    ON
+                                    menus.category_id = categories.category_id;";
+                        $result = @mysqli_query($dbc, $query); // Run the query.
+                        $num = @mysqli_num_rows($result);
+
+                        $counter = 1;
+
+                        echo '<div class="col-lg-12">';
+
+                        if ($num > 0) {
+
+                            //echo '<div class="col-lg-12">';
+                            echo '<table class="table table-striped table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col"><center>#</center></th>
+                                                    <th scope="col"><center>Name</center></th>
+                                                    <th scope="col"><center>Price</center></th>
+                                                    <th scope="col"><center>Category name</center></th>
+                                                    <th scope="col"><center>Availability</center></th>
+                                                    </tr>
+                                            </thead>';
+
+                            while ($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                                echo '<tbody>
+                                                <tr>
+                                                    <th scope="row">' . $counter . '</th>
+                                                    <td>' . $row['name'] . '</td>
+                                                    <td>' . $row['price'] . '</td>
+                                                    <td>' . $row['category_name'] . '</td>'; ?>
+                                                    <td>
+                                                        <select class="form-select availability-select text-white" name="availability" data-id="<?= $row['menus_id'] ?>" data-original-value="<?= $row['availability'] == 'Yes' ? 1 : 0 ?>">
+                                                            <option value="1" <?= $row['availability'] == 'Yes' ? 'selected' : '' ?>>Yes</option>
+                                                            <option value="0" <?= $row['availability'] == 'No' ? 'selected' : '' ?>>No</option>
+                                                        </select>
+                                                    </td><?php
+                                        echo '</tr>';
+                                $counter++;
+                            }
+                            echo '</tbody>';
+                            echo '</table>';
+                            //echo '</div>';
+
+                        } else {
+                        }
+                        echo '</div>';
+                    } else {
+                        $cat = $_POST['category_id'];
+                        $selected = $cat;
+
+                        $query3 = "SELECT
+                                    menus.menus_id,
+                                    menus.name,
+                                    menus.price,
+                                    categories.name AS category_name,  
+                                    CASE 
+                                        WHEN menus.availability = 1 THEN 'Yes'
+                                        ELSE 'No'
+                                    END AS availability,
+                                    menus.created_at,
+                                    menus.updated_at
+                                    FROM menus
+                                    JOIN
+                                    categories
+                                    ON
+                                    menus.category_id = categories.category_id
+                                    WHERE menus.category_id = $cat";
+                        $result3 = @mysqli_query($dbc, $query3); // Run the query.
+                        $num3 = @mysqli_num_rows($result3);
+
+                        if ($num3 > 0) {
+
+                            echo '<table class="table table-striped table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col"><center>#</center></th>
+                                                        <th scope="col"><center>Name</center></th>
+                                                        <th scope="col"><center>Price</center></th>
+                                                        <th scope="col"><center>Category name</center></th>
+                                                        <th scope="col"><center>Availability</center></th>
+                                                        </tr>
+                                                </thead>';
+
+                            while ($row3 = @mysqli_fetch_array($result3, MYSQLI_ASSOC)) {
+                                echo '<tbody>
+                                                    <tr>
+                                                        <th scope="row">' . $counter . '</th>
+                                                        <td>' . $row3['name'] . '</td>
+                                                        <td>' . $row3['price'] . '</td>
+                                                        <td>' . $row3['category_name'] . '</td>'; ?>
+                                                        <td>
+                                                            <select class="form-select availability-select text-white" name="availability" data-id="<?= $row3['menus_id'] ?>" data-original-value="<?= $row3['availability'] == 'Yes' ? 1 : 0 ?>">
+                                                                <option value="1" <?= $row3['availability'] == 'Yes' ? 'selected' : '' ?>>Yes</option>
+                                                                <option value="0" <?= $row3['availability'] == 'No' ? 'selected' : '' ?>>No</option>
+                                                            </select>
+                                                        </td><?php
+                                            echo '</tr>';
+                                $counter++;
+                            }
+                            echo '</tbody>';
+                            echo '</table>';
+
+                            echo '<div class="row">';
+
+                            $query4 = "SELECT 
+                                menus.menus_id, 
+                                menus.name
+                                FROM 
+                                menus
+                                JOIN 
+                                categories
+                                ON 
+                                menus.category_id = categories.category_id
+                                WHERE 
+                                menus.category_id = $cat";
+                            $result4 = @mysqli_query($dbc, $query4); // Run the query.
+                            $num4 = @mysqli_num_rows($result4);
+
+                            if ($num4 > 0) {
+                                // Store results in an array
+                                $items = [];
+                                while ($row4 = @mysqli_fetch_array($result4, MYSQLI_ASSOC)) {
+                                    $items[] = $row4;
+                                }
+
+                                // set price
+                                echo '<div class="col-xl-4">
+                                            <form action="view_menu.php" method="post">
+                                            <div class="card p-4">
+                                                <div class="row gy-4">
+                                                    <div class="pagetitle">
+                                                        <h1>Set Price</h1>
+                                                    </div>';
+
+                                echo '<div class="col-md-12">
+                                        <select class="form-select js-example-basic-single" name="menus_id" aria-label="Default select example" id="fieldB" required>
+                                        <option value="" selected disabled>Items</option>';
+
+                                // Use the stored results
+                                foreach ($items as $item) {
+                                    echo '<option value="' . htmlspecialchars($item['menus_id']) . '">' . htmlspecialchars($item['name']) . '</option>';
+                                }
+                                echo '</select>';
+                                echo '</div>';
+
+                                echo '<div class="col-md-3">
+                                        <input type="number" class="form-control" name="price1" placeholder="Price" required step="0.1">
+                                    </div>';
+
+                                echo '<div class="col-md-12 text-center">
+                                        <button type="submit" class="btn btn-primary" id="buttonB">Confirm</button>
+                                        <input type="hidden" name="price" value="TRUE" />
+                                    </div>';
+
+                                echo '</div>';
+                                echo '</div>';
+                                echo '</form>';
+                                echo '</div>';
+
+                                // delete item
+                                echo '<div class="col-xl-4">
+                                            <form action="view_menu.php" method="post">
+                                                <div class="card p-4">
+                                                    <div class="row gy-4">
+                                                        <div class="pagetitle">
+                                                            <h1>Delete item</h1>
+                                                        </div>';
+                                echo '<div class="col-md-12">
+                                        <select class="form-select js-example-basic-single" name="menus_id" aria-label="Default select example" id="fieldC" required>
+                                        <option value="" selected disabled>Items</option>';
+
+                                // Use the stored results again
+                                foreach ($items as $item) {
+                                    echo '<option value="' . htmlspecialchars($item['menus_id']) . '">' . htmlspecialchars($item['name']) . '</option>';
+                                }
+                                echo '</select>';
+                                echo '</div>';
+
+                                echo '<div class="col-md-12 text-center">
+                                        <button type="submit" class="btn btn-danger" id="delete">Confirm</button>
+                                        <input type="hidden" name="deleted" value="TRUE" />
+                                    </div>';
+
+                                echo '</div>';
+                                echo '</div>';
+                                echo '</form>';
+                                echo '</div>';
+                            } else {
+                                echo '<p>No items available.</p>';
+                            }
+
+                            echo '</div>';
+                        } else {
+                            echo 'none';
+                        }
+                    }
+                } else {
+
+                    /*$query = "SELECT
                                 menus.menus_id,
                                 menus.name,
                                 menus.price,
                                 categories.name AS category_name,  
-                                menus.availability,
+                                CASE 
+                                    WHEN menus.availability = 1 THEN 'Yes'
+                                    ELSE 'No'
+                                END AS availability,
                                 menus.created_at,
                                 menus.updated_at
                                 FROM menus
@@ -246,340 +480,278 @@
 
                     $counter = 1;
 
-                    if (mysqli_affected_rows($dbc) > 0) {
-                        echo '
-                                    <div class="alert alert-success bg-success text-light border-0 alert-dismissible fade show" role="alert">
-                                        Success!
-                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-                                    </div>';
-                    }
-
-                    echo '<div class="col-lg-12">';
+                    echo '<div class="col-lg-12" id="searchresult">';
 
                     if ($num > 0) {
 
-                        //echo '<div class="col-lg-12">';
                         echo '<table class="table table-striped table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col"><center>#</center></th>
-                                                <th scope="col"><center>Name</center></th>
-                                                <th scope="col"><center>Price</center></th>
-                                                <th scope="col"><center>Category name</center></th>
-                                                <th scope="col"><center>Availability</center></th>
-                                                <th scope="col"><center>Created at</center></th>
-                                                <th scope="col"><center>Updated at</center></th>
-                                                </tr>
-                                        </thead>';
+                                <thead>
+                                    <tr>
+                                        <th scope="col"><center>#</center></th>
+                                        <th scope="col"><center>Name</center></th>
+                                        <th scope="col"><center>Price</center></th>
+                                        <th scope="col"><center>Category name</center></th>
+                                        <th scope="col"><center>Availability</center></th>
+                                        <th scope="col"><center>Created at</center></th>
+                                        <th scope="col"><center>Updated at</center></th>
+                                    </tr>
+                                </thead>';
 
                         while ($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)) {
                             echo '<tbody>
-                                            <tr>
-                                                <th scope="row">' . $counter . '</th>
-                                                <td>' . $row['name'] . '</td>
-                                                <td>' . $row['price'] . '</td>
-                                                <td>' . $row['category_name'] . '</td>
-                                                <td>' . $row['availability'] . '</td>
-                                                <td>' . $row['created_at'] . '</td>
-                                                <td>' . $row['updated_at'] . '</td>
-                                            </tr>';
+                                        <tr>
+                                            <th scope="row">' . $counter . '</th>
+                                            <td>' . $row['name'] . '</td>
+                                            <td>' . $row['price'] . '</td>
+                                            <td>' . $row['category_name'] . '</td>
+                                            <td>' . $row['availability'] . '</td>
+                                            <td>' . $row['created_at'] . '</td>
+                                            <td>' . $row['updated_at'] . '</td>
+                                        </tr>';
                             $counter++;
                         }
                         echo '</tbody>';
                         echo '</table>';
-                        //echo '</div>';
-
                     } else {
                     }
-                    echo '</div>';
-                } else {
-                    $cat = $_POST['category_id'];
-                    $selected = $cat;
+                    echo '</div>';*/
+                }
 
-                    $query3 = "SELECT
+                if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['menus_id']) && isset($_POST['availability'])) {
+                    $menus_id = $_POST['menus_id'];
+                    $availability = $_POST['availability'];
+
+                    // Validate availability (optional but recommended)
+                    if ($availability != 0 && $availability != 1) {
+                        http_response_code(400); // Bad request
+                        echo "Invalid availability value.";
+                        exit;
+                    }
+
+                    // Prepared statement (for security)
+                    $update_query = "UPDATE menus SET availability = ? WHERE menus_id = ?";
+                    $stmt = mysqli_prepare($dbc, $update_query);
+
+                    if ($stmt) {
+                        mysqli_stmt_bind_param($stmt, "ii", $availability, $menus_id);
+                        $update_result = mysqli_stmt_execute($stmt);
+
+                        if ($update_result) {
+                            echo "Menu updated successfully!";
+                        } else {
+                            http_response_code(500); // Internal server error
+                            echo "Failed to update menu.";
+                            // Log the error: error_log(mysqli_stmt_error($stmt));
+                        }
+                        mysqli_stmt_close($stmt);
+                    } else {
+                        http_response_code(500);
+                        echo "Error preparing statement.";
+                        // Log the error: error_log(mysqli_error($dbc));
+                    }
+                    exit; // Stop further execution after AJAX response
+                }
+
+                if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['stock'], $_POST['menus_id'], $_POST['availability'])) {
+                    $id = $_POST['menus_id'];
+                    $availability = (int) $_POST['availability'];
+                    $availabilityValue = ($availability === $yes) ? 'TRUE' : 'FALSE';
+
+                    $query5 = " UPDATE menus
+                        SET availability =  $availabilityValue
+                        WHERE menus_id = $id";
+                    $result5 = @mysqli_query($dbc, $query5); // Run the query.
+                    //$num5 = @mysqli_num_rows($result5);
+
+                    if (mysqli_affected_rows($dbc) > 0) {
+                        echo '
+                            <div class="alert alert-success bg-success text-light border-0 alert-dismissible fade show" role="alert">
+                                Success! New category has been created.
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                                        
+                            <script type="text/javascript">
+                                window.location.reload();
+                            </script>';
+                    }
+                }
+
+                if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deleted'], $_POST['menus_id'])) {
+                    $id = $_POST['menus_id'];
+                    //$availability = (int) $_POST['availability'];
+                    //$availabilityValue = ($availability === $yes) ? 'TRUE' : 'FALSE';
+
+                    $query5 = " DELETE FROM menus
+                        WHERE menus_id = $id";
+                    $result5 = @mysqli_query($dbc, $query5); // Run the query.
+                    //$num5 = @mysqli_num_rows($result5);
+
+                    if (mysqli_affected_rows($dbc) > 0) {
+                        echo '
+                            <div class="alert alert-success bg-success text-light border-0 alert-dismissible fade show" role="alert">
+                                Success! An item has been deleted.
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                                        
+                            <script type="text/javascript">
+                                window.location.reload();
+                            </script>';
+                    }
+                }
+
+                if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['price'], $_POST['menus_id'], $_POST['price'])) {
+                    $id = $_POST['menus_id'];
+                    $price = $_POST['price1'];
+
+                    $query5 = " UPDATE menus
+                        SET price =  $price
+                        WHERE menus_id = $id";
+                    $result5 = @mysqli_query($dbc, $query5); // Run the query.
+                    //$num5 = @mysqli_num_rows($result5);
+
+                    if (mysqli_affected_rows($dbc) > 0) {
+                        echo '
+                            <div class="alert alert-success bg-success text-light border-0 alert-dismissible fade show" role="alert">
+                                Success! Price has been edited.
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                                        
+                            <script type="text/javascript">
+                                window.location.reload();
+                            </script>';
+                    }
+                }
+
+                if (isset($_POST['search'])) {
+                    $search = $_POST['search'];
+                    $query = "SELECT
                                 menus.menus_id,
                                 menus.name,
                                 menus.price,
-                                categories.name AS category_name,  
-                                menus.availability,
+                                categories.name AS category_name,
+                                CASE 
+                                    WHEN menus.availability = 1 THEN 'Yes'
+                                    ELSE 'No'
+                                END AS availability,
                                 menus.created_at,
                                 menus.updated_at
-                                FROM menus
+                                FROM
+                                menus
                                 JOIN
                                 categories
                                 ON
                                 menus.category_id = categories.category_id
-                                WHERE menus.category_id = $cat";
-                    $result3 = @mysqli_query($dbc, $query3); // Run the query.
-                    $num3 = @mysqli_num_rows($result3);
-
-                    if (mysqli_affected_rows($dbc) > 0) {
-                        echo '
-                                    <div class="alert alert-success bg-success text-light border-0 alert-dismissible fade show" role="alert">
-                                        Success!
-                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-                                    </div>';
-                    }
-
-                    if ($num3 > 0) {
-
+                                WHERE
+                                menus.name LIKE '{$search}%' OR menus.price LIKE '{$search}%' OR categories.name LIKE '{$search}%'";
+                
+                    $result = @mysqli_query($dbc, $query); // Run the query.
+                    $num = @mysqli_num_rows($result);
+                
+                    if ($num > 0) {
                         echo '<table class="table table-striped table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col"><center>#</center></th>
-                                                    <th scope="col"><center>Name</center></th>
-                                                    <th scope="col"><center>Price</center></th>
-                                                    <th scope="col"><center>Category name</center></th>
-                                                    <th scope="col"><center>Availability</center></th>
-                                                    <th scope="col"><center>Created at</center></th>
-                                                    <th scope="col"><center>Updated at</center></th>
-                                                    </tr>
-                                            </thead>';
+                                <thead>
+                                    <tr>
+                                        <th scope="col"><center>#</center></th>
+                                        <th scope="col"><center>Name</center></th>
+                                        <th scope="col"><center>Price</center></th>
+                                        <th scope="col"><center>Category name</center></th>
+                                        <th scope="col"><center>Availability</center></th>
+                                    </tr>
+                                </thead>';
 
-                        while ($row3 = @mysqli_fetch_array($result3, MYSQLI_ASSOC)) {
+                        $items = []; // Initialize the $items array here
+                        $counter = 1; // Initialize $counter here
+                        while ($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                            $items[] = $row; // Store each row in the $items array
                             echo '<tbody>
-                                                <tr>
-                                                    <th scope="row">' . $counter . '</th>
-                                                    <td>' . $row3['name'] . '</td>
-                                                    <td>' . $row3['price'] . '</td>
-                                                    <td>' . $row3['category_name'] . '</td>
-                                                    <td>' . $row3['availability'] . '</td>
-                                                    <td>' . $row3['created_at'] . '</td>
-                                                    <td>' . $row3['updated_at'] . '</td>
-                                                </tr>';
-                            $counter++;
-                        }
-                        echo '</tbody>';
-                        echo '</table>';
-
-                        /*echo '<div class="col-xl-4">
-                                            <form action="view_menu.php" method="post">
-                                                <div class="card p-4">
-                                                        <div class="row gy-4">
-                                                                <div class="pagetitle">
-                                                                    <h1>Set Availability</h1>
-                                                                </div>';*/
-
-                        echo '<div class="row">';
-
-                        $query4 = "SELECT 
-                            menus.menus_id, 
-                            menus.name
-                            FROM 
-                            menus
-                            JOIN 
-                            categories
-                            ON 
-                            menus.category_id = categories.category_id
-                            WHERE 
-                            menus.category_id = $cat";
-                        $result4 = @mysqli_query($dbc, $query4); // Run the query.
-                        $num4 = @mysqli_num_rows($result4);
-
-                        if ($num4 > 0) {
-                            // Store results in an array
-                            $items = [];
-                            while ($row4 = @mysqli_fetch_array($result4, MYSQLI_ASSOC)) {
-                                $items[] = $row4;
-                            }
-
-                            echo '<div class="col-xl-6">
-                                        <form action="view_menu.php" method="post">
-                                        <div class="card p-4">
-                                            <div class="row gy-4">
-                                                <div class="pagetitle">
-                                                    <h1>Set Availability</h1>
-                                                </div>';
-                            echo '<div class="col-md-12">
-                                    <select class="form-select" name="menus_id" aria-label="Default select example" id="fieldB" required>
-                                    <option value="" selected disabled>Items</option>';
-
-                            // Use the stored results
-                            foreach ($items as $item) {
-                                echo '<option value="' . htmlspecialchars($item['menus_id']) . '">' . htmlspecialchars($item['name']) . '</option>';
-                            }
-                            echo '</select>';
-                            echo '</div>';
-
-                            echo '<div class="col-md-12">
-                                        <select class="form-select" name="availability" aria-label="Default select example" id="fieldB" required>
-                                                <option value="" selected disabled>Availability</option>
-                                                <option value="' . htmlspecialchars($yes) . '">Yes</option>
-                                                <option value="' . htmlspecialchars($no) . '">No</option>
-                                        </select>
-                                </div>';
-
-                            echo '<div class="col-md-12 text-center">
-                                    <button type="submit" class="btn btn-primary" id="buttonB">Confirm</button>
-                                    <input type="hidden" name="stock" value="TRUE" />
-                                </div>';
-
-                            echo '</div>';
-                            echo '</div>';
-                            echo '</form>';
-                            echo '</div>';
-
-                            echo '<div class="col-xl-6">
-                                                                        <form action="view_menu.php" method="post">
-                                                                            <div class="card p-4">
-                                                                                <div class="row gy-4">
-                                                                                    <div class="pagetitle">
-                                                                                        <h1>Delete item</h1>
-                                                                                    </div>';
-                            echo '<div class="col-md-12">
-                                                                            <select class="form-select" name="menus_id" aria-label="Default select example" id="fieldC" required>
-                                                                            <option value="" selected disabled>Items</option>';
-
-                            // Use the stored results again
-                            foreach ($items as $item) {
-                                echo '<option value="' . htmlspecialchars($item['menus_id']) . '">' . htmlspecialchars($item['name']) . '</option>';
-                            }
-                            echo '</select>';
-                            echo '</div>';
-
-                            echo '<div class="col-md-12 text-center">
-                                    <button type="submit" class="btn btn-danger" id="delete">Confirm</button>
-                                    <input type="hidden" name="deleted" value="TRUE" />
-                                </div>';
-
-                            echo '</div>';
-                            echo '</div>';
-                            echo '</form>';
-                            echo '</div>';
-                        } else {
-                            echo '<p>No items available.</p>';
-                        }
-
-                        echo '</div>';
-
-                        /*echo '<div class="col-md-12">
-                                                <select class="form-select" name="availability" aria-label="Default select example" id="fieldB" required>
-                                                    <option value="" selected disabled>Availability</option>
-                                                    <option value="' . $yes . '">Yes</option>
-                                                    <option value="' . $no . '">No</option>
-                                                </select>
-                                            </div>';
-                                            
-                                    echo '<div class="col-md-12 text-center">
-                                                <button type="submit" class="btn btn-primary" id="buttonB">Confirm</button>
-                                                <input type="hidden" name="stock" value="TRUE" />
-                                            </div>';
-
-                                    echo '</div>';
-                                    echo '</div>';
-                                    echo '</form>';
-                                    echo '</div>';*/
-                    } else {
-                        echo 'none';
-                    }
-                }
-            } else {
-
-                $query = "SELECT
-                            menus.menus_id,
-                            menus.name,
-                            menus.price,
-                            categories.name AS category_name,  
-                            menus.availability,
-                            menus.created_at,
-                            menus.updated_at
-                            FROM menus
-                            JOIN
-                            categories
-                            ON
-                            menus.category_id = categories.category_id;";
-                $result = @mysqli_query($dbc, $query); // Run the query.
-                $num = @mysqli_num_rows($result);
-
-                $counter = 1;
-
-                echo '<div class="col-lg-12">';
-                if ($num > 0) {
-
-                    echo '<table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th scope="col"><center>#</center></th>
-                                    <th scope="col"><center>Name</center></th>
-                                    <th scope="col"><center>Price</center></th>
-                                    <th scope="col"><center>Category name</center></th>
-                                    <th scope="col"><center>Availability</center></th>
-                                    <th scope="col"><center>Created at</center></th>
-                                    <th scope="col"><center>Updated at</center></th>
-                                </tr>
-                            </thead>';
-
-                    while ($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-                        echo '<tbody>
                                     <tr>
                                         <th scope="row">' . $counter . '</th>
                                         <td>' . $row['name'] . '</td>
                                         <td>' . $row['price'] . '</td>
-                                        <td>' . $row['category_name'] . '</td>
-                                        <td>' . $row['availability'] . '</td>
-                                        <td>' . $row['created_at'] . '</td>
-                                        <td>' . $row['updated_at'] . '</td>
-                                    </tr>';
-                        $counter++;
+                                        <td>' . $row['category_name'] . '</td>'; ?>
+                                        <td>
+                                            <select class="form-select availability-select text-white" name="availability" data-id="<?= $row['menus_id'] ?>" data-original-value="<?= $row['availability'] == 'Yes' ? 1 : 0 ?>">
+                                                <option value="1" <?= $row['availability'] == 'Yes' ? 'selected' : '' ?>>Yes</option>
+                                                <option value="0" <?= $row['availability'] == 'No' ? 'selected' : '' ?>>No</option>
+                                            </select>
+                                        </td>
+                            <?php
+                            echo '</tr>';
+                            $counter++;
+                        }
+                        echo '</tbody>';
+                        echo '</table>';
+                
+                        echo '<div class="row">';
+                        // set price
+                        echo '<div class="col-xl-4">
+                                    <form action="view_menu.php" method="post">
+                                    <div class="card p-4">
+                                        <div class="row gy-4">
+                                            <div class="pagetitle">
+                                                <h1>Set Price</h1>
+                                            </div>';
+                
+                        echo '<div class="col-md-12">
+                                <select class="form-select js-example-basic-single" name="menus_id" aria-label="Default select example" id="fieldB" required>
+                                <option value="" selected disabled>Items</option>';
+                
+                        // Use the stored results
+                        foreach ($items as $item) {
+                            echo '<option value="' . htmlspecialchars($item['menus_id']) . '">' . htmlspecialchars($item['name']) . '</option>';
+                        }
+                        echo '</select>';
+                        echo '</div>';
+                
+                        echo '<div class="col-md-3">
+                                <input type="number" class="form-control" name="price1" placeholder="Price" required step="0.1">
+                            </div>';
+                
+                        echo '<div class="col-md-12 text-center">
+                                <button type="submit" class="btn btn-primary" id="buttonB">Confirm</button>
+                                <input type="hidden" name="price" value="TRUE" />
+                            </div>';
+                
+                        echo '</div>';
+                        echo '</div>';
+                        echo '</form>';
+                        echo '</div>';
+                
+                        // delete item
+                        echo '<div class="col-xl-4">
+                                    <form action="view_menu.php" method="post">
+                                        <div class="card p-4">
+                                            <div class="row gy-4">
+                                                <div class="pagetitle">
+                                                    <h1>Delete item</h1>
+                                                </div>';
+                        echo '<div class="col-md-12">
+                                <select class="form-select js-example-basic-single" name="menus_id" aria-label="Default select example" id="fieldC" required>
+                                <option value="" selected disabled>Items</option>';
+                
+                        // Use the stored results again
+                        foreach ($items as $item) {
+                            echo '<option value="' . htmlspecialchars($item['menus_id']) . '">' . htmlspecialchars($item['name']) . '</option>';
+                        }
+                        echo '</select>';
+                        echo '</div>';
+                
+                        echo '<div class="col-md-12 text-center">
+                                <button type="submit" class="btn btn-danger" id="delete">Confirm</button>
+                                <input type="hidden" name="deleted" value="TRUE" />
+                            </div>';
+                
+                        echo '</div>';
+                        echo '</div>';
+                        echo '</form>';
+                        echo '</div>';
+
+                        echo '</div>';
+                    } else {
+                        echo "no data found";
                     }
-                    echo '</tbody>';
-                    echo '</table>';
-                } else {
                 }
-                echo '</div>';
-            }
-
-            if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['stock'], $_POST['menus_id'], $_POST['availability'])) {
-                $id = $_POST['menus_id'];
-                $availability = (int) $_POST['availability'];
-                $availabilityValue = ($availability === $yes) ? 'TRUE' : 'FALSE';
-
-                $query5 = " UPDATE menus
-                    SET availability =  $availabilityValue
-                    WHERE menus_id = $id";
-                $result5 = @mysqli_query($dbc, $query5); // Run the query.
-                //$num5 = @mysqli_num_rows($result5);
-
-                if (mysqli_affected_rows($dbc) > 0) {
-                    echo '
-                        <div class="alert alert-success bg-success text-light border-0 alert-dismissible fade show" role="alert">
-                            Success! New category has been created.
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                                    
-                        <script type="text/javascript">
-                            window.location.reload();
-                        </script>';
-                }
-            }
-
-            if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deleted'], $_POST['menus_id'])) {
-                $id = $_POST['menus_id'];
-                //$availability = (int) $_POST['availability'];
-                //$availabilityValue = ($availability === $yes) ? 'TRUE' : 'FALSE';
-
-                $query5 = " DELETE FROM menus
-                    WHERE menus_id = $id";
-                $result5 = @mysqli_query($dbc, $query5); // Run the query.
-                //$num5 = @mysqli_num_rows($result5);
-
-                if (mysqli_affected_rows($dbc) > 0) {
-                    echo '
-                        <div class="alert alert-success bg-success text-light border-0 alert-dismissible fade show" role="alert">
-                            Success! An item has been deleted.
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                                    
-                        <script type="text/javascript">
-                            window.location.reload();
-                        </script>';
-                }
-            }
-
             ?>
-        </div>
-        </div>
-
         </div>
 
     </main><!-- End #main -->
@@ -610,14 +782,6 @@
             document.getElementById("datetime").textContent = formattedDate;
         });
     </script>
-    <!--<script>
-        // Set the alert to fade out after 3 seconds
-        setTimeout(function() {
-            var alert = document.querySelector('.alert');
-            alert.classList.remove('show');
-            alert.classList.add('fade');
-        }, 2000); // 3000 milliseconds = 3 seconds
-    </script>-->
     <script>
         // Attach event listeners to both buttons
         document.getElementById('buttonA').addEventListener('click', function(event) {
@@ -638,7 +802,64 @@
             fieldB.required = true;
         });
     </script>
+        <!-- update availability -->
+        <script>
+        const selects = document.querySelectorAll('select[name="availability"]');
 
+        function updateSelectClass(select) {
+            if (select.value === "1") {
+                select.classList.remove('bg-secondary');
+                select.classList.add('bg-success');
+            } else {
+                select.classList.remove('bg-success');
+                select.classList.add('bg-secondary');
+            }
+        }
+
+        // Set initial classes on page load
+        selects.forEach(select => {
+            updateSelectClass(select);
+        });
+
+        selects.forEach(select => {
+            select.addEventListener('change', function() {
+                const menusId = this.dataset.id;
+                const originalValue = parseInt(this.dataset.originalValue);
+                const newValue = parseInt(this.value);
+
+                if (newValue !== originalValue) {
+                    if (confirm('Are you sure you want to change the availability?')) {
+                        updateAvailability(menusId, newValue, this); // Pass 'this' (the select element)
+                    } else {
+                        this.value = originalValue;
+                        updateSelectClass(this); // Revert class if canceled
+                    }
+                } else {
+                    updateSelectClass(this); // Update class if value is the same
+                }
+            });
+        });
+
+        function updateAvailability(menusId, availability, selectElement) { // Add selectElement parameter
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '');
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    alert('Menu updated successfully!');
+                    selectElement.dataset.originalValue = availability; // Update original value
+                    updateSelectClass(selectElement); // Update the class after successful update
+                } else {
+                    alert('Failed to update menu.');
+                }
+            };
+            xhr.send(`menus_id=${menusId}&availability=${availability}`);
+        }
+    </script>
+
+
+    <!-- jquery cdn -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
@@ -652,8 +873,21 @@
     <script src="assets/vendor/tinymce/tinymce.min.js"></script>
     <script src="assets/vendor/php-email-form/validate.js"></script>
 
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     <!-- Template Main JS File -->
     <script src="assets/js/main.js"></script>
+
+    <!-- Select2 Initialization -->
+    <script>
+        $(document).ready(function () {
+            $('.js-example-basic-single').select2();
+        });
+    </script>
 
 </body>
 
