@@ -387,7 +387,7 @@
                                 }
 
                                 // set price
-                                echo '<div class="col-xl-4">
+                                echo '<div class="col-xl-6">
                                             <form action="view_menu.php" method="post">
                                             <div class="card p-4">
                                                 <div class="row gy-4">
@@ -421,7 +421,7 @@
                                 echo '</div>';
 
                                 // delete item
-                                echo '<div class="col-xl-4">
+                                echo '<div class="col-xl-6">
                                             <form action="view_menu.php" method="post">
                                                 <div class="card p-4">
                                                     <div class="row gy-4">
@@ -475,46 +475,46 @@
                                 categories
                                 ON
                                 menus.category_id = categories.category_id;";
-                    $result = @mysqli_query($dbc, $query); // Run the query.
-                    $num = @mysqli_num_rows($result);
+                        $result = @mysqli_query($dbc, $query); // Run the query.
+                        $num = @mysqli_num_rows($result);
 
-                    $counter = 1;
+                        $counter = 1;
 
-                    echo '<div class="col-lg-12" id="searchresult">';
+                        echo '<div class="col-lg-12" id="searchresult">';
 
-                    if ($num > 0) {
+                        if ($num > 0) {
 
-                        echo '<table class="table table-striped table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th scope="col"><center>#</center></th>
-                                        <th scope="col"><center>Name</center></th>
-                                        <th scope="col"><center>Price</center></th>
-                                        <th scope="col"><center>Category name</center></th>
-                                        <th scope="col"><center>Availability</center></th>
-                                        <th scope="col"><center>Created at</center></th>
-                                        <th scope="col"><center>Updated at</center></th>
-                                    </tr>
-                                </thead>';
-
-                        while ($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-                            echo '<tbody>
+                            echo '<table class="table table-striped table-bordered">
+                                    <thead>
                                         <tr>
-                                            <th scope="row">' . $counter . '</th>
-                                            <td>' . $row['name'] . '</td>
-                                            <td>' . $row['price'] . '</td>
-                                            <td>' . $row['category_name'] . '</td>
-                                            <td>' . $row['availability'] . '</td>
-                                            <td>' . $row['created_at'] . '</td>
-                                            <td>' . $row['updated_at'] . '</td>
-                                        </tr>';
-                            $counter++;
+                                            <th scope="col"><center>#</center></th>
+                                            <th scope="col"><center>Name</center></th>
+                                            <th scope="col"><center>Price</center></th>
+                                            <th scope="col"><center>Category name</center></th>
+                                            <th scope="col"><center>Availability</center></th>
+                                            <th scope="col"><center>Created at</center></th>
+                                            <th scope="col"><center>Updated at</center></th>
+                                        </tr>
+                                    </thead>';
+
+                            while ($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                                echo '<tbody>
+                                            <tr>
+                                                <th scope="row">' . $counter . '</th>
+                                                <td>' . $row['name'] . '</td>
+                                                <td>' . $row['price'] . '</td>
+                                                <td>' . $row['category_name'] . '</td>
+                                                <td>' . $row['availability'] . '</td>
+                                                <td>' . $row['created_at'] . '</td>
+                                                <td>' . $row['updated_at'] . '</td>
+                                            </tr>';
+                                $counter++;
+                            }
+                            echo '</tbody>';
+                            echo '</table>';
+                        } else {
                         }
-                        echo '</tbody>';
-                        echo '</table>';
-                    } else {
-                    }
-                    echo '</div>';*/
+                        echo '</div>';*/
                 }
 
                 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['menus_id']) && isset($_POST['availability'])) {
@@ -591,11 +591,7 @@
                             <div class="alert alert-success bg-success text-light border-0 alert-dismissible fade show" role="alert">
                                 Success! An item has been deleted.
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                                        
-                            <script type="text/javascript">
-                                window.location.reload();
-                            </script>';
+                            </div>';
                     }
                 }
 
@@ -614,11 +610,7 @@
                             <div class="alert alert-success bg-success text-light border-0 alert-dismissible fade show" role="alert">
                                 Success! Price has been edited.
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                                        
-                            <script type="text/javascript">
-                                window.location.reload();
-                            </script>';
+                            </div>';
                     }
                 }
 
@@ -684,7 +676,7 @@
                 
                         echo '<div class="row">';
                         // set price
-                        echo '<div class="col-xl-4">
+                        echo '<div class="col-xl-6">
                                     <form action="view_menu.php" method="post">
                                     <div class="card p-4">
                                         <div class="row gy-4">
@@ -718,7 +710,7 @@
                         echo '</div>';
                 
                         // delete item
-                        echo '<div class="col-xl-4">
+                        echo '<div class="col-xl-6">
                                     <form action="view_menu.php" method="post">
                                         <div class="card p-4">
                                             <div class="row gy-4">
