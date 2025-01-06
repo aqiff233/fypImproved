@@ -224,32 +224,32 @@
                     </ul>
                 </li><!-- End Components Nav -->
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-card-list"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="view_category.php">
-                            <i class="bi bi-circle"></i><span>View List Category</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="category.php">
-                            <i class="bi bi-circle"></i><span>Create Category</span>
-                        </a>
-                    </li>
-                </ul>
-            </li><!-- End Forms Nav -->
-            <?php endif; ?> 
-
                 <li class="nav-item">
-                    <a class="nav-link collapse show" href="report.php">
-                        <i class="bi bi-folder"></i>
-                        <span>Sales</span>
+                    <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+                        <i class="bi bi-card-list"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
                     </a>
-                </li>
-           
+                    <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                        <li>
+                            <a href="view_category.php">
+                                <i class="bi bi-circle"></i><span>View List Category</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="category.php">
+                                <i class="bi bi-circle"></i><span>Create Category</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li><!-- End Forms Nav -->
+            <?php endif; ?>
+
+            <li class="nav-item">
+                <a class="nav-link collapse show" href="report.php">
+                    <i class="bi bi-folder"></i>
+                    <span>Sales</span>
+                </a>
+            </li>
+
 
             <li class="nav-heading">Users</li>
 
@@ -309,7 +309,6 @@
                 <div id="reportData" class="receipt-body">
                     <!-- Report data will be loaded here -->
                 </div>
-                <button class="btn btn-primary download-button" onclick="downloadReport()">Download Report</button>
             </div>
         </div>
 
@@ -342,7 +341,7 @@
             document.getElementById('generateReportBtn').addEventListener('click', generateReport);
 
             // Add an event listener for the search input
-            document.getElementById('reportSearchDate').addEventListener('change', function () {
+            document.getElementById('reportSearchDate').addEventListener('change', function() {
                 const selectedDate = this.value;
                 if (selectedDate) {
                     searchReportsByDate(selectedDate);
@@ -449,28 +448,6 @@
                     console.error('Error:', error);
                     alert('Failed to generate report.');
                 });
-        }
-
-        function downloadReport() {
-            // Get the HTML content of the report
-            const reportContent = document.getElementById('reportData').innerHTML;
-
-            // Create a Blob from the HTML content
-            const blob = new Blob([reportContent], {
-                type: 'text/html'
-            });
-
-            // Create a link element
-            const link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-
-            // Set the file name for the download
-            link.download = 'report.pdf';
-
-            // Append the link to the body, trigger the download, and remove the link
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
         }
 
         function searchReportsByDate(date) {

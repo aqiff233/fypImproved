@@ -117,7 +117,7 @@ function getTickets($dbc)
     $sql = "SELECT o.order_id, o.table_number, o.total_price, o.status, u.username
             FROM orders o
             LEFT JOIN users u ON o.user_id = u.user_id
-            WHERE o.status != 'Paid'
+            WHERE o.status NOT IN ('Paid', 'Cancelled')
             ORDER BY o.created_at DESC";
 
     $stmt = $dbc->prepare($sql);

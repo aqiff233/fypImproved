@@ -342,7 +342,7 @@
         updateStatusDropdownStyle(statusDropdown);
         statusDropdown.addEventListener('change', () => {
           const newStatus = statusDropdown.value;
-          // No need to define orderIdToUpdate here
+          
 
           if (newStatus === 'Paid') {
             // Check payment status
@@ -357,8 +357,7 @@
 
                   // Handle confirmation
                   document.getElementById('confirmUpdateBtn').onclick = () => {
-                    updateOrderStatus(order.order_id, newStatus); // Use order.order_id directly
-                    confirmationModal.hide();
+                    updateOrderStatus(order.order_id, newStatus); 
                   };
 
                   confirmationModal.show();
