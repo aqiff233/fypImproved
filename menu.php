@@ -26,6 +26,8 @@
     <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
     <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
     <!-- Template Main CSS File -->
     <link href="assets/css/style.css" rel="stylesheet">
 
@@ -106,6 +108,20 @@
                 <a class="nav-link collapsed" href="tickets.php">
                     <i class="bi bi-card-heading"></i>
                     <span>Tickets</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="kds.php">
+                    <i class="fa-solid fa-utensils"></i>
+                    <span>KDS</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="receipts.php">
+                    <i class="fa-solid fa-receipt"></i>
+                    <span>Receipts</span>
                 </a>
             </li>
 
@@ -271,16 +287,7 @@
 
     <!-- ======= Footer ======= -->
     <footer id="footer" class="footer">
-        <div class="copyright">
-            &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
-        </div>
-        <div class="credits">
-            <!-- All the links in the footer should remain intact. -->
-            <!-- You can delete the links only if you purchased the pro version. -->
-            <!-- Licensing information: https://bootstrapmade.com/license/ -->
-            <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-            Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-        </div>
+
     </footer><!-- End Footer -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {

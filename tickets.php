@@ -28,6 +28,8 @@
   <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
   <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
 </head>
@@ -71,101 +73,168 @@
 
   </header><!-- End Header -->
 
-  <!-- ======= Sidebar ======= -->
-  <aside id="sidebar" class="sidebar">
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar">
+        <ul class="sidebar-nav" id="sidebar-nav">
 
-    <ul class="sidebar-nav" id="sidebar-nav">
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="dashboard.php">
-          <i class="bi bi-grid"></i>
-          <span>Dashboard</span>
-        </a>
-      </li><!-- End Dashboard Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="take_order.php">
-          <i class="bi bi-bell-fill"></i>
-          <span>Take Order</span>
-        </a>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="orders.php">
-          <i class="bi bi-list-ul"></i>
-          <span>Orders</span>
-        </a>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link collapse show" href="tickets.php">
-          <i class="bi bi-card-heading"></i>
-          <span>Tickets</span>
-        </a>
-      </li>
-
-      <?php if ($role == 'admin' || $role == 'manager'): ?>
-        <li class="nav-heading">Catalogs</li>
-
-        <li class="nav-item">
-          <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-            <i class="bi bi-box-seam"></i><span>Menus</span><i class="bi bi-chevron-down ms-auto"></i>
-          </a>
-          <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-            <li>
-              <a href="view_menu.php">
-                <i class="bi bi-circle"></i><span>View List Menu</span>
-              </a>
+            <?php if ($role == 'kitchen'): ?>
+            <!-- Kitchen Role -->
+            <li class="nav-item">
+                <a class="nav-link collapse show" href="dashboard.php">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+                </a>
             </li>
-            <li>
-              <a href="menu.php">
-                <i class="bi bi-circle"></i><span>Create Menu</span>
-              </a>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="kds.php">
+                <i class="fa-solid fa-utensils"></i>
+                <span>KDS</span>
+                </a>
             </li>
-          </ul>
-        </li><!-- End Components Nav -->
 
-
-        <li class="nav-item">
-          <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-            <i class="bi bi-card-list"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
-          </a>
-          <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-            <li>
-              <a href="view_category.php">
-                <i class="bi bi-circle"></i><span>View List Category</span>
-              </a>
+            <?php elseif ($role == 'admin' || $role == 'manager'): ?>
+            <!-- Admin Role -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="dashboard.php">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+                </a>
             </li>
-            <li>
-              <a href="category.php">
-                <i class="bi bi-circle"></i><span>Create Category</span>
-              </a>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="take_order.php">
+                <i class="bi bi-bell-fill"></i>
+                <span>Take Order</span>
+                </a>
             </li>
-          </ul>
-        </li><!-- End Forms Nav -->
 
-        <li class="nav-heading">Report</li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="orders.php">
+                <i class="bi bi-list-ul"></i>
+                <span>Orders</span>
+                </a>
+            </li>
 
-        <li class="nav-item">
-          <a class="nav-link collapsed" href="report.php">
-            <i class="bi bi-folder"></i>
-            <span>Sales</span>
-          </a>
-        </li>
-      <?php endif; ?>
+            <li class="nav-item">
+                <a class="nav-link collapse show" href="tickets.php">
+                <i class="bi bi-card-heading"></i>
+                <span>Tickets</span>
+                </a>
+            </li>
 
-      <li class="nav-heading">Users</li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="kds.php">
+                <i class="fa-solid fa-utensils"></i>
+                <span>KDS</span>
+                </a>
+            </li>
 
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="logout.php">
-          <i class="bi bi-box-arrow-left"></i>
-          <span>Logout</span>
-        </a>
-      </li><!-- End Logout Page Nav -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="receipts.php">
+                <i class="fa-solid fa-receipt"></i>
+                <span>Receipts</span>
+                </a>
+            </li>
 
-    </ul>
+            <li class="nav-heading">Catalogs</li>
 
-  </aside><!-- End Sidebar-->
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-box-seam"></i><span>Menus</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="view_menu.php">
+                    <i class="bi bi-circle"></i><span>View List Menu</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="menu.php">
+                    <i class="bi bi-circle"></i><span>Create Menu</span>
+                    </a>
+                </li>
+                </ul>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-card-list"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="view_category.php">
+                    <i class="bi bi-circle"></i><span>View List Category</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="category.php">
+                    <i class="bi bi-circle"></i><span>Create Category</span>
+                    </a>
+                </li>
+                </ul>
+            </li>
+
+            <li class="nav-heading">Report</li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="report.php">
+                <i class="bi bi-folder"></i>
+                <span>Sales</span>
+                </a>
+            </li>
+
+            <?php else: ?>
+            <!-- Staff Role (Default) -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="dashboard.php">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="take_order.php">
+                <i class="bi bi-bell-fill"></i>
+                <span>Take Order</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="orders.php">
+                <i class="bi bi-list-ul"></i>
+                <span>Orders</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapse show" href="tickets.php">
+                <i class="bi bi-card-heading"></i>
+                <span>Tickets</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="receipts.php">
+                <i class="fa-solid fa-receipt"></i>
+                <span>Receipts</span>
+                </a>
+            </li>
+
+            <?php endif; ?>
+
+            <!-- Logout (Common to all roles) -->
+            <li class="nav-heading">Users</li>
+
+            <li class="nav-item">
+            <a class="nav-link collapsed" href="logout.php">
+                <i class="bi bi-box-arrow-left"></i>
+                <span>Logout</span>
+            </a>
+            </li>
+
+        </ul>
+    </aside><!-- End Sidebar-->
 
   <main id="main" class="main">
 
@@ -183,12 +252,7 @@
 
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
-    <div class="copyright">
-      © Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
-    </div>
-    <div class="credits">
-      Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-    </div>
+
   </footer><!-- End Footer -->
 
   <script>

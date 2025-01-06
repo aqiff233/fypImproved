@@ -26,6 +26,8 @@
   <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
   <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
 
@@ -72,97 +74,165 @@ $role = $_COOKIE['role'];
 
     <!-- ======= Sidebar ======= -->
     <aside id="sidebar" class="sidebar">
-
         <ul class="sidebar-nav" id="sidebar-nav">
 
+            <?php if ($role == 'kitchen'): ?>
+            <!-- Kitchen Role -->
+            <li class="nav-item">
+                <a class="nav-link collapse show" href="dashboard.php">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="kds.php">
+                <i class="fa-solid fa-utensils"></i>
+                <span>KDS</span>
+                </a>
+            </li>
+
+            <?php elseif ($role == 'admin' || $role == 'manager'): ?>
+            <!-- Admin Role -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="dashboard.php">
-                    <i class="bi bi-grid"></i>
-                    <span>Dashboard</span>
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
                 </a>
-            </li><!-- End Dashboard Nav -->
+            </li>
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="take_order.php">
-                    <i class="bi bi-bell-fill"></i>
-                    <span>Take Order</span>
+                <i class="bi bi-bell-fill"></i>
+                <span>Take Order</span>
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="orders.php">
-                    <i class="bi bi-card-text"></i>
-                    <span>Orders</span>
+                <i class="bi bi-list-ul"></i>
+                <span>Orders</span>
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="tickets.php">
-                    <i class="bi bi-card-heading"></i>
-                    <span>Tickets</span>
+                <i class="bi bi-card-heading"></i>
+                <span>Tickets</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="kds.php">
-                    <i class="bi bi-card-heading"></i>
-                    <span>KDS</span>
+                <a class="nav-link collapse show" href="kds.php">
+                <i class="fa-solid fa-utensils"></i>
+                <span>KDS</span>
                 </a>
             </li>
 
-            
-            <?php if ($role == 'admin' || $role == 'manager'): ?>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="receipts.php">
+                <i class="fa-solid fa-receipt"></i>
+                <span>Receipts</span>
+                </a>
+            </li>
+
             <li class="nav-heading">Catalogs</li>
 
             <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-box-seam"></i><span>Menus</span><i class="bi bi-chevron-down ms-auto"></i>
+                <i class="bi bi-box-seam"></i><span>Menus</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
                 <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="view_menu.php">
-                            <i class="bi bi-circle"></i><span>View List Menu</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="menu.php">
-                            <i class="bi bi-circle"></i><span>Create Menu</span>
-                        </a>
-                    </li>
+                <li>
+                    <a href="view_menu.php">
+                    <i class="bi bi-circle"></i><span>View List Menu</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="menu.php">
+                    <i class="bi bi-circle"></i><span>Create Menu</span>
+                    </a>
+                </li>
                 </ul>
-            </li><!-- End Components Nav -->
-            
+            </li>
 
             <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-card-list"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
+                <i class="bi bi-card-list"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
                 <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="view_category.php">
-                            <i class="bi bi-circle"></i><span>View List Category</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="category.php">
-                            <i class="bi bi-circle"></i><span>Create Category</span>
-                        </a>
-                    </li>
+                <li>
+                    <a href="view_category.php">
+                    <i class="bi bi-circle"></i><span>View List Category</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="category.php">
+                    <i class="bi bi-circle"></i><span>Create Category</span>
+                    </a>
+                </li>
                 </ul>
-            </li><!-- End Forms Nav -->
+            </li>
+
+            <li class="nav-heading">Report</li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="report.php">
+                <i class="bi bi-folder"></i>
+                <span>Sales</span>
+                </a>
+            </li>
+
+            <?php else: ?>
+            <!-- Staff Role (Default) -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="dashboard.php">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="take_order.php">
+                <i class="bi bi-bell-fill"></i>
+                <span>Take Order</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="orders.php">
+                <i class="bi bi-list-ul"></i>
+                <span>Orders</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="tickets.php">
+                <i class="bi bi-card-heading"></i>
+                <span>Tickets</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapse show" href="receipts.php">
+                <i class="fa-solid fa-receipt"></i>
+                <span>Receipts</span>
+                </a>
+            </li>
+
             <?php endif; ?>
 
+            <!-- Logout (Common to all roles) -->
             <li class="nav-heading">Users</li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="logout.php">
-                    <i class="bi bi-box-arrow-left"></i>
-                    <span>Logout</span>
-                </a>
-            </li><!-- End Logout Page Nav -->
+            <a class="nav-link collapsed" href="logout.php">
+                <i class="bi bi-box-arrow-left"></i>
+                <span>Logout</span>
+            </a>
+            </li>
 
         </ul>
-
     </aside><!-- End Sidebar-->
 
   <main id="main" class="main">
@@ -199,26 +269,26 @@ $role = $_COOKIE['role'];
     </section>
 
     <!-- Confirmation Modal -->
-  <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="confirmationModalLabel">Confirm Order Update</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          Are you sure you want to update the order status?
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-primary" id="confirmUpdateBtn">Update</button>
+    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="confirmationModalLabel">Confirm Order Update</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to update the order status?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary" id="confirmUpdateBtn">Update</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Error Modal -->
-  <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <!-- Error Modal -->
+    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -240,12 +310,7 @@ $role = $_COOKIE['role'];
 
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
-    <div class="copyright">
-      © Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
-    </div>
-    <div class="credits">
-      Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-    </div>
+
   </footer><!-- End Footer -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
