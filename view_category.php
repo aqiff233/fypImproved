@@ -26,6 +26,8 @@
     <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
     <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
     <!-- Template Main CSS File -->
     <link href="assets/css/style.css" rel="stylesheet">
 
@@ -108,6 +110,20 @@
                     <span>Tickets</span>
                 </a>
             </li>
+
+            <li class="nav-item">
+        <a class="nav-link collapsed" href="kds.php">
+          <i class="fa-solid fa-utensils"></i>
+          <span>KDS</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="receipts.php">
+          <i class="fa-solid fa-receipt"></i>
+          <span>Receipts</span>
+        </a>
+      </li>
 
             <?php if ($role == 'admin' || $role == 'manager'): ?>
                 <li class="nav-heading">Catalogs</li>
@@ -194,7 +210,10 @@
 
                     //echo '<div class="col-lg-8">';
                     if ($num > 0) {
-
+                        $items = [];
+                        while ($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                            $items[] = $row;
+                        }
                         echo '<table class="table table-striped table-bordered">
                                 <thead>
                                     <tr>
@@ -204,12 +223,12 @@
                                     </tr>
                                 </thead>';
 
-                        while ($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                        foreach ($items as $row) {
                             echo '<tbody>
                                 <tr>
                                     <td><b>' . $counter . '</b></td>
-                                    <td>' . $row['name'] . '</td>
-                                    <td>' . $row['description'] . '</td>
+                                    <td>' . htmlspecialchars($row['name']) . '</td>
+                                    <td>' . htmlspecialchars($row['description']) . '</td>
                                 </tr>';
                             $counter++;
                         }
@@ -235,69 +254,129 @@
 
                         if (mysqli_affected_rows($dbc) > 0) {
                             echo '
-                                <div class="alert alert-success bg-success text-light border-0 alert-dismissible fade show" role="alert">
-                                    Success! New category has been created.
-                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-            
                                 <script type="text/javascript">
                                     window.location.reload();
-                                    </script>';
+                                </script>';
                         }
                     }
 
+                    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deleted'], $_POST['category_id'])) {
+                        $cat = $_POST['category_id'];
+                    
+                        if (empty($cat)) {
+                            echo 'Error: Category ID is missing or invalid.';
+                            exit;
+                        }
+                    
+                        // Use prepared statements for security
+                        $stmt = mysqli_prepare($dbc, "DELETE FROM categories WHERE category_id = ?");
+                        mysqli_stmt_bind_param($stmt, "i", $cat); // Assuming category_id is an integer
+                    
+                        if (mysqli_stmt_execute($stmt)) {
+                            if (mysqli_stmt_affected_rows($stmt) > 0) {
+                                echo '
+                                    <script type="text/javascript">
+                                        window.location.reload();
+                                    </script>';
+                            }
+                        } else {
+                            echo 'Error: Failed to delete category.';
+                        }
+                        mysqli_stmt_close($stmt);
+                    }
+                    
                     ?>
                 </div>
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-xl-6">
+                <div class="card p-4">
 
-        <div class="col-xl-12">
-            <div class="card p-4">
+                    <div class="pagetitle">
+                        <h5>Edit</h5>
+                    </div>
+                    <form action="view_category.php" method="post">
+                        <div class="row gy-4">
 
-                <div class="pagetitle">
-                    <h5>Edit</h5>
+                            <div class="col-md-4">
+                                <?php
+
+                                if ($num2 > 0) {
+                                    echo '<select class="form-select" name="category_id" aria-label="Default select example" required>
+                                        <option value="" selected disabled>Category</option>';
+
+                                    while ($row2 = @mysqli_fetch_array($result2, MYSQLI_ASSOC)) {
+                                        echo '<option value=' . $row2['category_id'] . '>' . $row2['name'] . '</option>';
+                                    }
+                                    echo '</select>';
+                                } else {
+                                    echo '<p>No categories available.</p>';
+                                }
+
+                                ?>
+                            </div>
+
+                            <div class="col-md-12">
+                                <input type="text" class="form-control" name="name" placeholder="Category name" required>
+                            </div>
+
+                            <div class="col-md-12">
+                                <textarea class="form-control" name="desc" rows="6" placeholder="Description" required></textarea>
+                            </div>
+
+                            <div class="col-md-12 text-center">
+
+                                <button type="submit" class="btn btn-primary">Confirm</button>
+                                <input type="hidden" name="submitted" value="TRUE" />
+
+                            </div>
+
+                        </div>
+                    </form>
                 </div>
-                <form action="view_category.php" method="post">
-                    <div class="row gy-4">
 
-                        <div class="col-md-2">
+            </div>
+
+            <div class="col-xl-6">
+                <div class="card p-4">
+                    <div class="pagetitle">
+                        <h5>Delete</h5>
+                    </div>
+                    <form action="view_category.php" method="post">
+                        <div class="row gy-4">
+
+                            <div class="col-md-4">
                             <?php
+
+                            $query2 = "select category_id, name from categories";
+                            $result2 = @mysqli_query($dbc, $query2); // Run the query.
+                            $num2 = @mysqli_num_rows($result2);
 
                             if ($num2 > 0) {
                                 echo '<select class="form-select" name="category_id" aria-label="Default select example" required>
-                                    <option value="" selected>Category</option>';
+                                    <option value="" selected disabled>Category</option>';
 
                                 while ($row2 = @mysqli_fetch_array($result2, MYSQLI_ASSOC)) {
                                     echo '<option value=' . $row2['category_id'] . '>' . $row2['name'] . '</option>';
                                 }
+                                echo '</select>';
                             } else {
                                 echo '<p>No categories available.</p>';
                             }
-                            echo '</select>';
 
                             ?>
-                        </div>
+                            </div>
 
-                        <div class="col-md-12">
-                            <input type="text" class="form-control" name="name" placeholder="Category name" required>
-                        </div>
-
-                        <div class="col-md-12">
-                            <textarea class="form-control" name="desc" rows="6" placeholder="Description" required></textarea>
-                        </div>
-
-                        <div class="col-md-12 text-center">
-
-                            <button type="submit" class="btn btn-primary">Confirm</button>
-                            <input type="hidden" name="submitted" value="TRUE" />
-                            <!--<button type="submit" class="btn btn-danger">Delete</button>
-                            <input type="hidden" name="deleted" value="TRUE" />-->
+                            <div class="col-md-12 text-center">
+                                <button type="submit" class="btn btn-danger" id="delete" onclick="return confirmDelete()">Delete</button>
+                                <input type="hidden" name="deleted" value="TRUE" />
+                            </div>
 
                         </div>
-
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
 
         </div>
@@ -306,16 +385,7 @@
 
     <!-- ======= Footer ======= -->
     <footer id="footer" class="footer">
-        <div class="copyright">
-            &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
-        </div>
-        <div class="credits">
-            <!-- All the links in the footer should remain intact. -->
-            <!-- You can delete the links only if you purchased the pro version. -->
-            <!-- Licensing information: https://bootstrapmade.com/license/ -->
-            <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-            Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-        </div>
+
     </footer><!-- End Footer -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
@@ -329,6 +399,11 @@
             const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(now);
             document.getElementById("datetime").textContent = formattedDate;
         });
+    </script>
+    <script type="text/javascript">
+        function confirmDelete() {
+            return confirm("Are you sure you want to delete this category? This action cannot be undone.");
+        }
     </script>
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 

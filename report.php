@@ -28,6 +28,8 @@
     <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
     <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
     <!-- Template Main CSS File -->
     <link href="assets/css/style.css" rel="stylesheet">
     <style>
@@ -203,6 +205,21 @@
                     <span>Tickets</span>
                 </a>
             </li>
+
+            <li class="nav-item">
+              <a class="nav-link collapsed" href="kds.php">
+                <i class="fa-solid fa-utensils"></i>
+                <span>KDS</span>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link collapsed" href="receipts.php">
+                <i class="fa-solid fa-receipt"></i>
+                <span>Receipts</span>
+              </a>
+            </li>
+
             <?php if ($role == 'admin' || $role == 'manager'): ?>
                 <li class="nav-heading">Catalogs</li>
 
@@ -224,24 +241,26 @@
                     </ul>
                 </li><!-- End Components Nav -->
 
-                <li class="nav-item">
-                    <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-                        <i class="bi bi-card-list"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
-                    </a>
-                    <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                        <li>
-                            <a href="view_category.php">
-                                <i class="bi bi-circle"></i><span>View List Category</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="category.php">
-                                <i class="bi bi-circle"></i><span>Create Category</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li><!-- End Forms Nav -->
-            <?php endif; ?>
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-card-list"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="view_category.php">
+                            <i class="bi bi-circle"></i><span>View List Category</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="category.php">
+                            <i class="bi bi-circle"></i><span>Create Category</span>
+                        </a>
+                    </li>
+                </ul>
+            </li><!-- End Forms Nav -->
+            <?php endif; ?> 
+
+            <li class="nav-heading">Report</li>
 
             <li class="nav-item">
                 <a class="nav-link collapse show" href="report.php">
@@ -316,12 +335,7 @@
 
     <!-- ======= Footer ======= -->
     <footer id="footer" class="footer">
-        <div class="copyright">
-            © Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
-        </div>
-        <div class="credits">
-            Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-        </div>
+
     </footer><!-- End Footer -->
 
     <script>
