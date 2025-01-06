@@ -79,14 +79,14 @@ $role = $_COOKIE['role'];
             <?php if ($role == 'kitchen'): ?>
             <!-- Kitchen Role -->
             <li class="nav-item">
-                <a class="nav-link collapse show" href="dashboard.php">
+                <a class="nav-link collapsed" href="dashboard.php">
                 <i class="bi bi-grid"></i>
                 <span>Dashboard</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="kds.php">
+                <a class="nav-link collapse show" href="kds.php">
                 <i class="fa-solid fa-utensils"></i>
                 <span>KDS</span>
                 </a>
