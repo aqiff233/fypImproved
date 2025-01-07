@@ -112,17 +112,17 @@
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="kds.php">
-            <i class="fa-solid fa-utensils"></i>
-            <span>KDS</span>
+          <i class="fa-solid fa-utensils"></i>
+          <span>KDS</span>
         </a>
       </li>
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="receipts.php">
-                    <i class="fa-solid fa-receipt"></i>
-                    <span>Receipts</span>
-                </a>
-            </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="receipts.php">
+          <i class="fa-solid fa-receipt"></i>
+          <span>Receipts</span>
+        </a>
+      </li>
 
       <?php if ($role == 'admin' || $role == 'manager'): ?>
         <li class="nav-heading">Catalogs</li>
@@ -163,6 +163,13 @@
             </li>
           </ul>
         </li><!-- End Forms Nav -->
+
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="users.php">
+            <i class="bi bi-person-circle"></i>
+            <span>User Management</span>
+          </a>
+        </li>
 
         <li class="nav-heading">Report</li>
 
