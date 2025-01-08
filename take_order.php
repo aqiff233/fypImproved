@@ -317,7 +317,7 @@ if ($menuItemsResult->num_rows > 0) {
         <main id="main" class="main">
 
             <div class="pagetitle">
-                <h1>Blank Page</h1>
+                <h1>Take Order</h1>
             </div><!-- End Page Title -->
 
             <!--Categories NAVBAR-->
