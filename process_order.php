@@ -98,7 +98,7 @@ function getOrdersForKDS($dbc)
 
 function getUnavailableTables($dbc)
 {
-    $sql = "SELECT DISTINCT table_number FROM orders WHERE status IN ('In Progress', 'Ready', 'Served')";
+    $sql = "SELECT DISTINCT table_number FROM orders WHERE status IN ('')";
     $result = $dbc->query($sql);
 
     $tablesInProgress = [];
