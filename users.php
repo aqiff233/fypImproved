@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Create menu</title>
+    <title>POS for Siddiqie</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -26,7 +26,7 @@
     <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
     <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
-      <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
     <!-- Template Main CSS File -->
     <link href="assets/css/style.css" rel="stylesheet">
@@ -53,7 +53,6 @@
     $username = $_COOKIE['username'];
     $role = $_COOKIE['role'];
     ?>
-
     <!-- ======= Header ======= -->
     <header id="header" class="header fixed-top d-flex align-items-center">
 
@@ -132,14 +131,14 @@
                     <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
                         <i class="bi bi-box-seam"></i><span>Menus</span><i class="bi bi-chevron-down ms-auto"></i>
                     </a>
-                    <ul id="components-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
+                    <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                         <li>
                             <a href="view_menu.php">
                                 <i class="bi bi-circle"></i><span>View List Menu</span>
                             </a>
                         </li>
                         <li>
-                            <a href="menu.php" class="active">
+                            <a href="menu.php">
                                 <i class="bi bi-circle"></i><span>Create Menu</span>
                             </a>
                         </li>
@@ -166,7 +165,7 @@
                 </li><!-- End Forms Nav -->
 
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="users.php">
+                    <a class="nav-link collapse show" href="users.php">
                         <i class="bi bi-person-circle"></i>
                         <span>User Management</span>
                     </a>
@@ -195,11 +194,10 @@
 
     </aside><!-- End Sidebar-->
 
-
     <main id="main" class="main">
 
         <div class="pagetitle">
-            <h1>Create Item for Menu</h1>
+            <h1>Users</h1>
         </div><!-- End Page Title -->
 
         <?php
@@ -207,31 +205,133 @@
         require_once('mysqli.php'); // Connect to the db.
         global $dbc;
 
-        $query2 = "select category_id, name from categories";
-        $result2 = @mysqli_query($dbc, $query2); // Run the query.
-        $num2 = @mysqli_num_rows($result2);
+        $query = "SELECT username, password, role FROM users";
+        $result = @mysqli_query($dbc, $query);
 
+        $counter = 1;
+
+        if (mysqli_affected_rows($dbc) > 0) {
+            echo '<table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width: 50px;"><center>#</center></th>
+                            <th scope="col"><center>Userame</center></th>
+                            <th scope="col"><center>Role</center></th>
+                            </tr>
+                    </thead>';
+            while ($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                echo '<tbody>
+                                    <tr>
+                                        <th scope="row">' . $counter . '</th>
+                                        <td>' . $row['username'] . '</td>
+                                        <td>' . $row['role'] . '</td>
+                                    </tr>';
+                $counter++;
+            }
+            echo '</tbody>';
+            echo '</table>';
+        }
 
         if (isset($_POST['submitted'])) {
+
             $name = $_POST['name'];
-            $price = $_POST['price'];
-            $cat = $_POST['category_id'];
+            $pass = $_POST['confirmPassword'];
+            $role = $_POST['role'];
 
-            $query = "INSERT INTO menus (name, price, category_id)
-                        VALUES
-                        ('$name', '$price', '$cat')";
-            $result = @mysqli_query($dbc, $query);
+            // Sanitize the input
+            $name = mysqli_real_escape_string($dbc, $name);
+            $pass = mysqli_real_escape_string($dbc, $pass);
 
-            if (mysqli_affected_rows($dbc) > 0) {
-                echo '<div class="alert alert-success bg-success text-light border-0 alert-dismissible fade show" role="alert">
-                            Success! New item has been created.
+            // Check for duplicate username first
+            $checkQuery = "SELECT username FROM users WHERE username = '$name'";
+            $checkResult = mysqli_query($dbc, $checkQuery);
+
+            if (mysqli_num_rows($checkResult) > 0) {
+                // Username already exists
+                echo '
+                <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
+                    Error! The username you entered already exists. Please choose a different username.
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>';
+            } else {
+
+
+
+                if ($role === '1') {
+                    $query = "INSERT INTO users (username, password, role) VALUES ('$name', SHA2('$pass', 256), 'staff')";
+                    $result = @mysqli_query($dbc, $query);
+
+                    if (mysqli_affected_rows($dbc) > 0) {
+                        unset($_POST);
+
+                        echo '
+                        <script>
+                            window.location.href = window.location.href; // Reload without query string
+                        </script>';
+                    } else {
+                        echo '
+                        <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
+                            System Error! You could not create new user due to system error.
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>';
-            } else {
-                echo '<div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
-                        System Error! You could not add due to system error.
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>';
+                    }
+                } else if ($role === '2') {
+                    $query = "INSERT INTO users (username, password, role) VALUES ('$name', SHA2('$pass', 256), 'kitchen')";
+                    $result = @mysqli_query($dbc, $query);
+
+                    if (mysqli_affected_rows($dbc) > 0) {
+                        unset($_POST);
+
+                        echo '
+                        <script>
+                            window.location.href = window.location.href; // Reload without query string
+                        </script>';
+                    } else {
+                        echo '
+                        <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
+                            System Error! You could not create new user due to system error.
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>';
+                    }
+                } else if ($role === '3') {
+                    $query = "INSERT INTO users (username, password, role) VALUES ('$name', SHA2('$pass', 256), 'manager')";
+                    $result = @mysqli_query($dbc, $query);
+
+                    if (mysqli_affected_rows($dbc) > 0) {
+                        unset($_POST);
+
+                        echo '
+                        <script>
+                            window.location.href = window.location.href; // Reload without query string
+                        </script>';
+                    } else {
+                        echo '
+                        <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
+                            System Error! You could not create new user due to system error.
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>';
+                    }
+                } else if ($role === '4') {
+                    $query = "INSERT INTO users (username, password, role) VALUES ('$name', SHA2('$pass', 256), 'admin')";
+                    $result = @mysqli_query($dbc, $query);
+
+                    if (mysqli_affected_rows($dbc) > 0) {
+                        unset($_POST);
+
+                        echo '
+                        <script>
+                            window.location.href = window.location.href; // Reload without query string
+                        </script>';
+                    } else {
+                        echo '
+                        <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
+                            System Error! You could not create new user due to system error.
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>';
+                    }
+                } else {
+                    echo "<p>Invalid role selected</p>";
+                }
             }
         }
 
@@ -239,47 +339,41 @@
 
         <div class="col-xl-6">
             <div class="card p-4">
-                <form action="menu.php" method="post">
+                <form action="users.php" method="post">
+                    <div class="pagetitle">
+                        <h1>Create User</h1> <br>
+                    </div>
                     <div class="row gy-4">
 
                         <div class="col-md-12">
-                            <input type="text" class="form-control" name="name" placeholder="Menu name" required>
-                        </div>
-
-                        <div class="col-md-3">
-                            <input type="number" class="form-control" name="price" placeholder="Price" required step="0.1">
+                            <label class="form-label">Username</label>
+                            <input type="text" class="form-control" id="usename" name="name" placeholder="Username" required>
                         </div>
 
                         <div class="col-md-12">
-                            <?php
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                        </div>
 
-                            /*
-                            require_once('mysqli.php'); // Connect to the db.
-                            global $dbc;
+                        <div class="col-md-12">
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm password" required>
+                            <span id="passwordError" style="color: red;"></span>
+                        </div>
 
-                            $query2 = "select category_id, name from categories";
-                            $result2 = @mysqli_query($dbc, $query2); // Run the query.
-                            $num2 = @mysqli_num_rows($result2);
-                            */
-
-                            if ($num2 > 0) {
-                                echo '<select class="form-select" name="category_id" aria-label="Default select example" required>
-                                        <option value="" selected>Category</option>';
-
-                                while ($row2 = @mysqli_fetch_array($result2, MYSQLI_ASSOC)) {
-                                    echo '<option value=' . $row2['category_id'] . '>' . $row2['name'] . '</option>';
-                                }
-                            } else {
-                                echo '<p>No categories available.</p>';
-                            }
-                            echo '</select>';
-
-                            ?>
+                        <div class="col-md-12">
+                            <label class="form-label">Role</label>
+                            <select class="form-select" name="role" aria-label="Default select example" required>
+                                <option selected disabled>Role</option>
+                                <option value="1">staff</option>
+                                <option value="2">kitchen</option>
+                                <option value="3">manager</option>
+                                <option value="4">admin</option>
+                            </select>
                         </div>
 
                         <div class="col-md-12 text-center">
 
-                            <button type="submit" class="btn btn-primary">Confirm</button>
+                            <button type="submit" class="btn btn-primary" id="submitButton">Confirm</button>
                             <input type="hidden" name="submitted" value="TRUE" />
 
                         </div>
@@ -308,6 +402,29 @@
             const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(now);
             document.getElementById("datetime").textContent = formattedDate;
         });
+    </script>
+    <script>
+        const form = document.querySelector('form');
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirmPassword');
+        const passwordError = document.getElementById('passwordError'); // Add a span for the error message
+        const submitButton = document.getElementById('submitButton');
+
+        function validatePassword() {
+            if (password.value === '' || confirmPassword.value === '') {
+                passwordError.textContent = "Password fields cannot be empty.";
+                submitButton.disabled = true;
+            } else if (password.value !== confirmPassword.value) {
+                passwordError.textContent = "Passwords do not match.";
+                submitButton.disabled = true;
+            } else {
+                passwordError.textContent = "";
+                submitButton.disabled = false;
+            }
+        }
+
+        password.addEventListener('input', validatePassword);
+        confirmPassword.addEventListener('input', validatePassword);
     </script>
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 

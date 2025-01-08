@@ -168,6 +168,13 @@
                     </ul>
                 </li><!-- End Forms Nav -->
 
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="users.php">
+                        <i class="bi bi-person-circle"></i>
+                        <span>User Management</span>
+                    </a>
+                </li>
+
                 <li class="nav-heading">Report</li>
 
                 <li class="nav-item">

@@ -29,6 +29,8 @@
   <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
   <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
   <style>
@@ -187,129 +189,212 @@
 </head>
 
 <body>
-<?php
-// Check if the user is logged in via cookies
-if (!isset($_COOKIE['user_id'])) {
+  <?php
+  // Check if the user is logged in via cookies
+  if (!isset($_COOKIE['user_id'])) {
     // If not logged in, redirect to login page
     header("Location: login.php");
     exit();
-}
+  }
 
-$user_id = $_COOKIE['user_id'];
-$username = $_COOKIE['username'];
-$role = $_COOKIE['role'];
-?>
+  $user_id = $_COOKIE['user_id'];
+  $username = $_COOKIE['username'];
+  $role = $_COOKIE['role'];
+  ?>
 
-    <!-- ======= Header ======= -->
-    <header id="header" class="header fixed-top d-flex align-items-center">
+  <!-- ======= Header ======= -->
+  <header id="header" class="header fixed-top d-flex align-items-center">
 
-        <div class="d-flex align-items-center justify-content-between">
-            <a href="dashboard.php" class="logo d-flex align-items-center">
-                <span class="d-none d-lg-block mx-auto">SIDDIQIE</span>
-            </a>
-            <i class="bi bi-list toggle-sidebar-btn"></i>
+    <div class="d-flex align-items-center justify-content-between">
+      <a href="dashboard.php" class="logo d-flex align-items-center">
+        <span class="d-none d-lg-block mx-auto">SIDDIQIE</span>
+      </a>
+      <i class="bi bi-list toggle-sidebar-btn"></i>
 
-        </div><!-- End Logo -->
+    </div><!-- End Logo -->
 
-        <div class="main mt-3 ms-3">
-            <p id="datetime"></p>
-        </div>
+    <div class="main mt-3 ms-3">
+      <p id="datetime"></p>
+    </div>
 
-        <div class="main ms-auto me-3">
-            <i class="ri ri-account-circle-fill"></i>
-            <span><?php echo $username; ?></span>
-        </div>
+    <div class="main ms-auto me-3">
+      <i class="ri ri-account-circle-fill"></i>
+      <span><?php echo $username; ?></span>
+    </div>
 
 
 
-    </header><!-- End Header -->
+  </header><!-- End Header -->
 
-    <!-- ======= Sidebar ======= -->
-    <aside id="sidebar" class="sidebar">
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
 
-        <ul class="sidebar-nav" id="sidebar-nav">
+      <?php if ($role == 'kitchen'): ?>
+        <!-- Kitchen Role -->
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="dashboard.php">
+            <i class="bi bi-grid"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="dashboard.php">
-                    <i class="bi bi-grid"></i>
-                    <span>Dashboard</span>
-                </a>
-            </li><!-- End Dashboard Nav -->
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="kds.php">
+            <i class="fa-solid fa-utensils"></i>
+            <span>KDS</span>
+          </a>
+        </li>
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="take_order.php">
-                    <i class="bi bi-bell-fill"></i>
-                    <span>Take Order</span>
-                </a>
+      <?php elseif ($role == 'admin' || $role == 'manager'): ?>
+        <!-- Admin Role -->
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="dashboard.php">
+            <i class="bi bi-grid"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="take_order.php">
+            <i class="bi bi-bell-fill"></i>
+            <span>Take Order</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="orders.php">
+            <i class="bi bi-list-ul"></i>
+            <span>Orders</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="tickets.php">
+            <i class="bi bi-card-heading"></i>
+            <span>Tickets</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="kds.php">
+            <i class="fa-solid fa-utensils"></i>
+            <span>KDS</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="receipts.php">
+            <i class="fa-solid fa-receipt"></i>
+            <span>Receipts</span>
+          </a>
+        </li>
+
+        <li class="nav-heading">Catalogs</li>
+
+        <li class="nav-item">
+          <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+            <i class="bi bi-box-seam"></i><span>Menus</span><i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            <li>
+              <a href="view_menu.php">
+                <i class="bi bi-circle"></i><span>View List Menu</span>
+              </a>
             </li>
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="orders.php">
-                    <i class="bi bi-card-text"></i>
-                    <span>Orders</span>
-                </a>
+            <li>
+              <a href="menu.php">
+                <i class="bi bi-circle"></i><span>Create Menu</span>
+              </a>
             </li>
+          </ul>
+        </li>
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="tickets.php">
-                    <i class="bi bi-card-heading"></i>
-                    <span>Tickets</span>
-                </a>
+        <li class="nav-item">
+          <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+            <i class="bi bi-card-list"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            <li>
+              <a href="view_category.php">
+                <i class="bi bi-circle"></i><span>View List Category</span>
+              </a>
             </li>
-            
-            <?php if ($role == 'admin' || $role == 'manager'): ?>
-            <li class="nav-heading">Catalogs</li>
+            <li>
+              <a href="category.php">
+                <i class="bi bi-circle"></i><span>Create Category</span>
+              </a>
+            </li>
+          </ul>
+        </li>
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-box-seam"></i><span>Menus</span><i class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="view_menu.php">
-                            <i class="bi bi-circle"></i><span>View List Menu</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="menu.php">
-                            <i class="bi bi-circle"></i><span>Create Menu</span>
-                        </a>
-                    </li>
-                </ul>
-            </li><!-- End Components Nav -->
-            
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="users.php">
+            <i class="bi bi-person-circle"></i>
+            <span>User Management</span>
+          </a>
+        </li>
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-card-list"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="view_category.php">
-                            <i class="bi bi-circle"></i><span>View List Category</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="category.php">
-                            <i class="bi bi-circle"></i><span>Create Category</span>
-                        </a>
-                    </li>
-                </ul>
-            </li><!-- End Forms Nav -->
-            <?php endif; ?>
+        <li class="nav-heading">Report</li>
 
-            <li class="nav-heading">Users</li>
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="report.php">
+            <i class="bi bi-folder"></i>
+            <span>Sales</span>
+          </a>
+        </li>
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="logout.php">
-                    <i class="bi bi-box-arrow-left"></i>
-                    <span>Logout</span>
-                </a>
-            </li><!-- End Logout Page Nav -->
+      <?php else: ?>
+        <!-- Staff Role (Default) -->
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="dashboard.php">
+            <i class="bi bi-grid"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
 
-        </ul>
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="take_order.php">
+            <i class="bi bi-bell-fill"></i>
+            <span>Take Order</span>
+          </a>
+        </li>
 
-    </aside><!-- End Sidebar-->
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="orders.php">
+            <i class="bi bi-list-ul"></i>
+            <span>Orders</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="tickets.php">
+            <i class="bi bi-card-heading"></i>
+            <span>Tickets</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="receipts.php">
+            <i class="fa-solid fa-receipt"></i>
+            <span>Receipts</span>
+          </a>
+        </li>
+
+      <?php endif; ?>
+
+      <!-- Logout (Common to all roles) -->
+      <li class="nav-heading">Users</li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="logout.php">
+          <i class="bi bi-box-arrow-left"></i>
+          <span>Logout</span>
+        </a>
+      </li>
+
+    </ul>
+  </aside><!-- End Sidebar-->
 
   <main id="main" class="main">
 
@@ -396,24 +481,24 @@ $role = $_COOKIE['role'];
         // Add event listeners to payment method buttons
         const paymentMethodButtons = document.querySelectorAll('.payment-method-buttons .btn');
         paymentMethodButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                // Remove active class from all buttons
-                paymentMethodButtons.forEach(btn => btn.classList.remove('active'));
-                // Add active class to clicked button
-                button.classList.add('active');
-                // Load content based on selected method
-                const method = button.dataset.method;
-                loadPaymentMethodContent(method, orderId);
-            });
+          button.addEventListener('click', () => {
+            // Remove active class from all buttons
+            paymentMethodButtons.forEach(btn => btn.classList.remove('active'));
+            // Add active class to clicked button
+            button.classList.add('active');
+            // Load content based on selected method
+            const method = button.dataset.method;
+            loadPaymentMethodContent(method, orderId);
+          });
         });
 
         // Load default content (Cash)
         loadPaymentMethodContent('cash', orderId);
-    } else {
+      } else {
         // Handle case where no order_id is provided
         console.error("No order ID provided.");
         alert("No order ID provided.");
-    }
+      }
     });
 
     function fetchOrderDetails(orderId) {
@@ -438,12 +523,12 @@ $role = $_COOKIE['role'];
       document.getElementById('paymentTotalCost').textContent = order.total_price;
     }
 
-    function loadPaymentMethodContent(method,orderId) {
-            const contentContainer = document.querySelector('.payment-method-content');
-            const totalCost = document.getElementById('totalCost').textContent;
-            switch (method) {
-              case 'cash':
-            contentContainer.innerHTML = `
+    function loadPaymentMethodContent(method, orderId) {
+      const contentContainer = document.querySelector('.payment-method-content');
+      const totalCost = document.getElementById('totalCost').textContent;
+      switch (method) {
+        case 'cash':
+          contentContainer.innerHTML = `
                 
                 <div class="cash-input-group">
                     <i class="bi bi-cash-coin"></i>
@@ -460,13 +545,13 @@ $role = $_COOKIE['role'];
                 <div id="changeAmount" class="mt-3 change-amount"></div>
             `;
 
-            // Add event listener to the charge button dynamically
-            document.getElementById('chargeButton').addEventListener('click', () => {
-                handleCashPayment(orderId);
-            });
-            break;
-            case 'card':
-            contentContainer.innerHTML = `
+          // Add event listener to the charge button dynamically
+          document.getElementById('chargeButton').addEventListener('click', () => {
+            handleCashPayment(orderId);
+          });
+          break;
+        case 'card':
+          contentContainer.innerHTML = `
                 <div class="cash-input-group">
                     <i class="bi bi-credit-card"></i>
                     <input type="text" id="cardAmount" class="form-control" value="RM${totalCost}" readonly>
@@ -475,11 +560,11 @@ $role = $_COOKIE['role'];
                 <div id="paymentMessage" class="mt-3"></div>
             `;
 
-            // Add event listener to the charge button dynamically
-            document.getElementById('chargeButton').addEventListener('click', () => {
-                handleCardPayment(orderId, parseFloat(totalCost));
-            });
-            break;
+          // Add event listener to the charge button dynamically
+          document.getElementById('chargeButton').addEventListener('click', () => {
+            handleCardPayment(orderId, parseFloat(totalCost));
+          });
+          break;
         default:
           contentContainer.innerHTML = '<p>Select a payment method above.</p>';
       }
@@ -501,128 +586,131 @@ $role = $_COOKIE['role'];
       }
     }*/
 
-    
 
-        function handleCashPayment(orderId) {
-          console.log("handleCashPayment called with orderId:", orderId); // Check if orderId is correct
-            const totalCost = parseFloat(document.getElementById('totalCost').textContent);
-            const cashReceived = parseFloat(document.getElementById('cashReceived').value);
-            const paymentMessageContainer = document.getElementById('paymentMessage');
-            const changeAmountContainer = document.getElementById('changeAmount');
-            paymentMessageContainer.innerHTML = ''; // Clear previous messages
-            changeAmountContainer.innerHTML = ''; // Clear previous change amount
-            if (cashReceived < totalCost) {
-                paymentMessageContainer.innerHTML = '<p class="error-message">Insufficient cash received.</p>';
-                return;
-            }
-            const change = cashReceived - totalCost;
-            if (change >= 0) {
-                changeAmountContainer.innerHTML = `Change: RM${change.toFixed(2)}`;
-                // Proceed with payment and status update
-                updatePaymentAndOrderStatus(orderId, totalCost, 'Cash', change);
-            }
-        }
 
-        function handleCardPayment(orderId, amount) {
-    const paymentMessageContainer = document.getElementById('paymentMessage');
-    paymentMessageContainer.innerHTML = ''; // Clear previous messages
+    function handleCashPayment(orderId) {
+      console.log("handleCashPayment called with orderId:", orderId); // Check if orderId is correct
+      const totalCost = parseFloat(document.getElementById('totalCost').textContent);
+      const cashReceived = parseFloat(document.getElementById('cashReceived').value);
+      const paymentMessageContainer = document.getElementById('paymentMessage');
+      const changeAmountContainer = document.getElementById('changeAmount');
+      paymentMessageContainer.innerHTML = ''; // Clear previous messages
+      changeAmountContainer.innerHTML = ''; // Clear previous change amount
+      if (cashReceived < totalCost) {
+        paymentMessageContainer.innerHTML = '<p class="error-message">Insufficient cash received.</p>';
+        return;
+      }
+      const change = cashReceived - totalCost;
+      if (change >= 0) {
+        changeAmountContainer.innerHTML = `Change: RM${change.toFixed(2)}`;
+        // Proceed with payment and status update
+        updatePaymentAndOrderStatus(orderId, totalCost, 'Cash', change);
+      }
+    }
 
-    // In a real application, you would integrate with a payment gateway here.
-    // This is just a placeholder to simulate the payment process.
-    console.log("Charging card for order ID:", orderId, "Amount:", amount);
+    function handleCardPayment(orderId, amount) {
+      const paymentMessageContainer = document.getElementById('paymentMessage');
+      paymentMessageContainer.innerHTML = ''; // Clear previous messages
 
-    // Simulate payment processing delay
-    setTimeout(() => {
+      // In a real application, you would integrate with a payment gateway here.
+      // This is just a placeholder to simulate the payment process.
+      console.log("Charging card for order ID:", orderId, "Amount:", amount);
+
+      // Simulate payment processing delay
+      setTimeout(() => {
         // Assume the payment is successful for now
-        const paymentResult = { success: true };
+        const paymentResult = {
+          success: true
+        };
 
         if (paymentResult.success) {
-            paymentMessageContainer.innerHTML = '<p class="text-success">Payment successful!</p>';
-            // Update payment and order status
-            updatePaymentAndOrderStatus(orderId, amount, 'Credit/Debit Card', 0); // Change is 0 for card payments
+          paymentMessageContainer.innerHTML = '<p class="text-success">Payment successful!</p>';
+          // Update payment and order status
+          updatePaymentAndOrderStatus(orderId, amount, 'Credit/Debit Card', 0); // Change is 0 for card payments
         } else {
-            paymentMessageContainer.innerHTML = '<p class="error-message">Payment failed. Please try again.</p>';
+          paymentMessageContainer.innerHTML = '<p class="error-message">Payment failed. Please try again.</p>';
         }
-    }, 1000); // 1-second delay
-}
+      }, 1000); // 1-second delay
+    }
 
-        function updatePaymentAndOrderStatus(orderId, totalCost, paymentMethod, change) {
-            const formData = new FormData();
-            formData.append('order_id', orderId);
-            formData.append('payment_amount', totalCost);
-            formData.append('payment_method', paymentMethod);
-            formData.append('payment_status', 'Completed'); // Assuming immediate completion for cash
-            console.log("Order ID being used in updatePaymentAndOrderStatus :", orderId); 
-            // First, update the payment status
-            fetch('process_order.php?action=update_payment', {
+    function updatePaymentAndOrderStatus(orderId, totalCost, paymentMethod, change) {
+      const formData = new FormData();
+      formData.append('order_id', orderId);
+      formData.append('payment_amount', totalCost);
+      formData.append('payment_method', paymentMethod);
+      formData.append('payment_status', 'Completed'); // Assuming immediate completion for cash
+      console.log("Order ID being used in updatePaymentAndOrderStatus :", orderId);
+      // First, update the payment status
+      fetch('process_order.php?action=update_payment', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(paymentResult => {
+          if (paymentResult.success) {
+            // Then, update the order status
+            const orderFormData = new FormData();
+            orderFormData.append('order_id', orderId);
+            orderFormData.append('new_status', 'Paid');
+
+            fetch('process_order.php?action=update_status', {
                 method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(paymentResult => {
-                if (paymentResult.success) {
-                    // Then, update the order status
-                    const orderFormData = new FormData();
-                    orderFormData.append('order_id', orderId);
-                    orderFormData.append('new_status', 'Paid');
-                    
-                    fetch('process_order.php?action=update_status', {
-                        method: 'POST',
-                        body: orderFormData
-                    })
-                    .then(response => response.json())
-                    .then(orderResult => {
-                        if (orderResult.message) {
-                            console.log('Order status updated successfully');
-                            // Optionally, refresh the order details or redirect
-                            generateReceipt(orderId, paymentMethod, change);
-                        } else {
-                            throw new Error(orderResult.error || 'Failed to update order status');
-                        }
-                    });
+                body: orderFormData
+              })
+              .then(response => response.json())
+              .then(orderResult => {
+                if (orderResult.message) {
+                  console.log('Order status updated successfully');
+                  // Optionally, refresh the order details or redirect
+                  generateReceipt(orderId, paymentMethod, change);
                 } else {
-                    throw new Error(paymentResult.error || 'Failed to update payment in payments');
+                  throw new Error(orderResult.error || 'Failed to update order status');
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert(error);
-            });
-        }
-        function generateReceipt(orderId, paymentMethod, change) {
-            const formData = new FormData();
-            formData.append('order_id', orderId);
-            formData.append('payment_method', paymentMethod);
-            formData.append('change', change.toFixed(2));
+              });
+          } else {
+            throw new Error(paymentResult.error || 'Failed to update payment in payments');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert(error);
+        });
+    }
 
-            fetch('process_order.php?action=generate_receipt', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Display the receipt in the offcanvas
-                    showReceipt(orderId, paymentMethod, change);
-                } else {
-                    console.error('Error generating receipt:', data.error);
-                    alert('Failed to generate receipt.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to generate receipt.');
-            });
-        }
+    function generateReceipt(orderId, paymentMethod, change) {
+      const formData = new FormData();
+      formData.append('order_id', orderId);
+      formData.append('payment_method', paymentMethod);
+      formData.append('change', change.toFixed(2));
 
-        function showReceipt(orderId, paymentMethod, change) {
-            fetch(`process_order.php?action=fetch_receipt_details&order_id=${orderId}`)
-                .then(response => response.json())
-                .then(receiptData => {
-                const offcanvasBody = document.querySelector('#receiptOffcanvas .offcanvas-body');
-                offcanvasBody.innerHTML = ''; // Clear existing content
-                // Construct the receipt content
-                const receiptContent = `
+      fetch('process_order.php?action=generate_receipt', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // Display the receipt in the offcanvas
+            showReceipt(orderId, paymentMethod, change);
+          } else {
+            console.error('Error generating receipt:', data.error);
+            alert('Failed to generate receipt.');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Failed to generate receipt.');
+        });
+    }
+
+    function showReceipt(orderId, paymentMethod, change) {
+      fetch(`process_order.php?action=fetch_receipt_details&order_id=${orderId}`)
+        .then(response => response.json())
+        .then(receiptData => {
+          const offcanvasBody = document.querySelector('#receiptOffcanvas .offcanvas-body');
+          offcanvasBody.innerHTML = ''; // Clear existing content
+          // Construct the receipt content
+          const receiptContent = `
                     <div class="receipt-header">
                         <img src="assets/img/logo2-removebg.png" alt="Company Logo" style="width:100px; height:auto;">
                         <h5>RESTORAN SUDUT SELERA SIDDIQIE </h5>
@@ -656,18 +744,16 @@ $role = $_COOKIE['role'];
                         <p>Thank you for your visit!</p>
                     </div>
                 `;
-                offcanvasBody.innerHTML = receiptContent;
-                // Show the offcanvas
-                const receiptOffcanvas = new bootstrap.Offcanvas(document.getElementById('receiptOffcanvas'));
-                receiptOffcanvas.show();
-                })
-                .catch(error => {
-                console.error('Error fetching receipt details:', error);
-                alert('Failed to fetch receipt details.');
-                });
-        }
-
-
+          offcanvasBody.innerHTML = receiptContent;
+          // Show the offcanvas
+          const receiptOffcanvas = new bootstrap.Offcanvas(document.getElementById('receiptOffcanvas'));
+          receiptOffcanvas.show();
+        })
+        .catch(error => {
+          console.error('Error fetching receipt details:', error);
+          alert('Failed to fetch receipt details.');
+        });
+    }
   </script>
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
       class="bi bi-arrow-up-short"></i></a>
