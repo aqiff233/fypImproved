@@ -363,7 +363,7 @@
                         <div class="col-md-12">
                             <label class="form-label">Role</label>
                             <select class="form-select" name="role" aria-label="Default select example" required>
-                                <option selected disabled>Role</option>
+                                <option value="" selected disabled>Role</option>
                                 <option value="1">staff</option>
                                 <option value="2">kitchen</option>
                                 <option value="3">manager</option>
