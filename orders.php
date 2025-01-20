@@ -401,7 +401,7 @@
 
           if (newStatus === 'Paid') {
             // Check payment status
-            fetch(`check_payment.php?order_id=${order.order_id}`)
+            fetch(`process_order.php?order_id=${order.order_id}`)
               .then(response => response.json())
               .then(data => {
                 if (data.payment_status === 'Completed') {
@@ -431,7 +431,7 @@
                 // Show error modal for payment check error
                 const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
                 document.getElementById('errorModalLabel').textContent = 'Error';
-                document.querySelector('#errorModal .modal-body').textContent = 'An error occurred while checking payment status.';
+                document.querySelector('#errorModal .modal-body').textContent = 'Payment has not been completed for this order.';
                 errorModal.show();
                 statusDropdown.value = order.status; // Reset status
                 updateStatusDropdownStyle(statusDropdown);

@@ -1,5 +1,15 @@
 <?php
 
+/*DEFINE ('DB_USER', getenv('DB_USER'));    // Get username from environment variable
+DEFINE ('DB_PASSWORD', getenv('DB_PASSWORD')); // Get password from environment variable
+DEFINE ('DB_HOST', getenv('DB_HOST'));
+DEFINE ('DB_NAME', getenv('DB_NAME'));
+
+// Make the MySQL connection.
+$dbc = @mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) OR die ('Could not connect to MySQL: ' . mysqli_connect_error() );
+
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);*/
+
 DEFINE ('DB_USER', 'root');
 //DEFINE ('DB_PASSWORD', 'NO');
 DEFINE ('DB_HOST', 'localhost');

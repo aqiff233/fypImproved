@@ -1,3 +1,43 @@
+<?php
+        require_once('mysqli.php'); // Connect to the db.
+        global $dbc;
+
+        $errors = [];
+
+        if (isset($_POST['submitted'])) {
+
+            $u = $_POST['username'];
+            $p = $_POST['password'];
+
+            // Use prepared statement to prevent SQL injection
+            $query = "SELECT user_id, username, role FROM users WHERE username=? AND password=SHA2(?, 256)";
+            $stmt = mysqli_prepare($dbc, $query);
+            mysqli_stmt_bind_param($stmt, 'ss', $u, $p);
+            mysqli_stmt_execute($stmt);
+            $result = mysqli_stmt_get_result($stmt);
+            $row = mysqli_fetch_array($result, MYSQLI_NUM);
+
+            if ($row) { // A record was pulled from the database.
+
+                // Set cookies to store user data for 1 hour
+                setcookie('user_id', $row[0], time() + 86400, '/');
+                setcookie('username', $row[1], time() + 86400, '/');
+                setcookie('role', $row[2], time() + 86400, '/');
+
+                // Redirect to dashboard
+                header("Location: dashboard.php");
+                exit(); // Quit the script
+            } else {
+                echo '<div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
+                        Error! The username and password entered do not match those on file.
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>';
+            }
+        }
+
+        mysqli_close($dbc);
+        ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -41,48 +81,6 @@
 <body>
 
     <main>
-
-        <?php
-        require_once('mysqli.php'); // Connect to the db.
-        global $dbc;
-
-        $errors = [];
-
-        if (isset($_POST['submitted'])) {
-
-            $u = $_POST['username'];
-            $p = $_POST['password'];
-
-            // Use prepared statement to prevent SQL injection
-            $query = "SELECT user_id, username, role FROM users WHERE username=? AND password=SHA2(?, 256)";
-            $stmt = mysqli_prepare($dbc, $query);
-            mysqli_stmt_bind_param($stmt, 'ss', $u, $p);
-            mysqli_stmt_execute($stmt);
-            $result = mysqli_stmt_get_result($stmt);
-            $row = mysqli_fetch_array($result, MYSQLI_NUM);
-
-            if ($row) { // A record was pulled from the database.
-
-                // Set cookies to store user data for 1 hour
-                setcookie('user_id', $row[0], time() + 86400, '/');
-                setcookie('username', $row[1], time() + 86400, '/');
-                setcookie('role', $row[2], time() + 86400, '/');
-
-                // Redirect to dashboard
-                header("Location: dashboard.php");
-                exit(); // Quit the script
-            } else {
-                echo '<div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
-                        Error! The username and password entered do not match those on file.
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>';
-            }
-        }
-
-        mysqli_close($dbc);
-        ?>
-
-
 
         <div class="container">
 
